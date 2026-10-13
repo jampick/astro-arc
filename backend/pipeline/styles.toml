@@ -1051,3 +1051,95 @@ space = [
   "a forest hunt running from the near margin into the trees",
   "from a tower over a calendar of fields",
 ]
+
+
+# CHARTER, 2026-10-13 (new style, written to docs/charter-schema.md): the black
+# velvet paintings of Tahiti from the 1940s and 50s, as Edgar Leeteg made them
+# and the tiki bars hung them: everything comes out of black, lit warm from one
+# side, and the people in it are beautiful. Their glamour is kept at the level
+# of the reference prompt (bare shoulders, a pareu, partly draped, never
+# explicit). People are individuals, never a type.
+[velvet.world]
+era = "Tahiti and the islands around it between about 1940 and 1955: Papeete with its wharf, copra schooners and a few battered cars, and beyond it villages of thatched houses, reefs and lagoons. Technology is the outrigger canoe, the fishing spear, the hurricane lamp, the ukulele and the steamer that comes once a month."
+materials = "Warm skin, black water and wet basalt first, then palm thatch, pandanus matting, carved wood, tapa cloth, printed cotton pareu, shell, flowers and fruit. Every surface either catches the one warm light or sinks into black."
+physics = "Light comes from one side only: a fire, a lamp, a low moon or the last of a sunset. Skin, petals and wet things take that light so strongly they look lit from within; nothing else glows, and anything turned away from the light dissolves into the black."
+society = "Fishermen, copra cutters, market women, dancers, drummers, pastors, Chinese shopkeepers, sailors and the odd European beachcomber. Days here are feasts, dances, canoe races, Sunday church, songs on the porch and nights of fishing by torchlight as much as work."
+weather = "The whole range of the dark hours: a full moon on a still lagoon, a red sunset sinking into the sea, a hot night under black palms, a squall coming in off the reef, a hurricane night with the lamps blown out. The sky is black velvet or the end of a sunset, never day. Pick what the day calls for."
+inhabitants = "Tahitian men, women, children and elders of every age, each with their own face, plus sailors and beachcombers; reef fish, turtles, frigate birds, crabs, dogs and pigs; carved ancestral figures; and the tupapa'u, the spirits of the dead who walk at night. They are as often singing, eating or asleep as at work."
+strangeness = "The spirits are part of the night like the surf: people leave a lamp burning against them and go on talking. Nobody is surprised."
+numinous = "The sacred has a body of wood, stone and flesh: a carved tiki on a stone marae platform, a tupapa'u standing just outside the lamplight, a moon that seems to watch the lagoon. It is painted in the same velvet dark and warm glow as everything else, never as a beam or an aura."
+dread = "This world at its darkest is the hurricane night, a capsized canoe in black water, a schooner breaking on the reef, a lamp guttering out with a tupapa'u at the door. Painted with the same calm warm glazes as a feast, and the frame does not take sides."
+favoured_actors = "Beautiful young islanders, women and men, alone or in pairs, close enough to fill much of the frame: a woman with a tiare behind her ear, a fisherman with a spear on his shoulder, lovers in a canoe, a dancer by the fire. Elders, children and reef creatures round them out. The same half-length girl facing the viewer in every frame is the worn version; vary the pose, the setting and who it is."
+myth = "Polynesian tradition: Maui and his deeds, Hina who went to live in the moon, Tangaroa of the sea, Oro and the arioi, the voyaging canoes and star navigation; and the paradise the South Seas became in the stories of sailors, missionaries and painters."
+highlight = "The thing the eye finds first: something caught warm and brilliant out of the black velvet. Today's kind of wrongness is given with this definition. Painted in the same glazes as everything else."
+highlight_modes = [
+  "a carved figure that seems to be watching someone in the scene",
+  "a light falling from a source that is not in the frame",
+  "a flower or fruit brighter than its light allows",
+  "the sea lit from beneath by something unseen",
+  "a shadow that does not belong to what casts it",
+]
+
+[velvet.brief]
+signature = "SIGNATURE — at least one thing marks this as the islands, named explicitly: a carved tiki, an outrigger canoe, a tiare or hibiscus flower worn in the hair, a thatched house on the shore or palm fronds against the dark. It may be the highlight or the actor. A scene that could be any tropical beach or any night landscape is a failed response."
+allure = "ALLURE — whenever people are in frame, at least one is a strikingly good-looking young islander painted with this genre's glamour: bare shoulders and arms, a printed pareu or a fisherman's wrap, flowers in the hair, skin glowing in the warm light, in a pose of ease, work or dance rather than one held for the viewer. Always partly draped; never full nudity and never a sexual act. A frame of plain, fully clothed or faceless figures is a failed response."
+velvet = "VELVET — the black of the velvet is the largest area of the frame, and the lit subject comes out of it from one side. A frame where the background is a lit sky, a landscape in daylight or any colour but near-black is a failed response."
+temper = "TEMPER — the highlight, and anything numinous in the frame, is in this temper: {wonderTone}"
+
+# LIGHT: the global lines put the high-exposure band in full daylight, which
+# black velvet cannot hold. Every band stays mostly dark; exposure only changes
+# how bright and wide the one light is.
+[velvet.light]
+lo = "Deep night. At least three quarters of the frame is black, lit only by a lamp, a fire or a thin moon from one side. A frame with any evenly lit area is a failed response."
+mid = "Moonlight or firelight: one warm light from one side, with at least two thirds of the frame black. A frame in flat light is a failed response."
+hi = "A blazing sunset, a full moon or a bonfire: one strong warm light raking across the scene, with at least half the frame still black. Daylight or a lit blue sky is a failed response."
+
+[velvet.verbs]
+process_hard = ["pitching", "guttering out", "breaking on the reef", "thrashing", "shredding", "crackling", "streaming with rain", "heaving", "bending double", "going dark", "scattering embers", "rolling in white", "stripping the palms", "pounding the shore", "dragging out to sea", "blowing out", "flaring up", "booming on the reef", "rearing up", "splitting the palms", "scudding", "going under the swell"]
+process_soft = ["turning silver", "glowing amber", "settling at dusk", "lolling", "fanning", "sighing", "silvering", "rising on the swell", "unfolding in the heat", "shining wet", "bobbing at the shore", "scenting the dark", "hanging heavy", "beading with water", "nodding in the breeze", "spreading its fronds", "drying on a line", "laid out on leaves", "catching the moon", "flickering low"]
+actor_hard.work = ["spearing fish by torchlight at", "hauling a net into", "bailing out", "paddling hard against", "lashing down the thatch of"]
+actor_hard.rest = ["sheltering from the squall under", "keeping watch beside", "crouching out of the wind behind", "waiting out the storm in"]
+actor_hard.play = ["drumming hard beside", "dancing the tamure round", "racing canoes past"]
+actor_hard.ritual = ["leaving an offering at", "keeping a lamp burning against", "chanting before", "dancing for the spirits at"]
+actor_hard.travel = ["running before the storm across", "wading ashore toward", "beaching a canoe at", "steering through the pass toward"]
+actor_soft.work = ["weaving pandanus beside", "husking coconuts by", "mending a net at", "stringing a flower crown beside", "cooking in an earth oven by"]
+actor_soft.rest = ["dozing in a hammock by", "sitting on the step of", "smoking on the porch of", "lying on a mat near"]
+actor_soft.play = ["playing a ukulele to", "singing on the shore by", "swimming at night in", "feasting beside"]
+actor_soft.ritual = ["laying flowers on", "praying at", "hanging a garland on"]
+actor_soft.travel = ["paddling slowly across", "walking the beach toward", "drifting in a canoe past", "coming ashore at"]
+
+[velvet.registers]
+"botanical" = "Flowers and palms as ornament and shade: a hibiscus worn in the hair, a frond black against a red sunset. Petals take the light more brightly than anything near them."
+"bodily and anatomical" = "The body as the warm centre of the dark: a shoulder, a hand, a face sculpted by one light. Calm and individual, never a type."
+"fungal and decaying" = "Rot as the tropics' fast turn: a fallen breadfruit in the dark, a wreck's timbers going soft on the reef. Quiet and warm, never foul."
+"animal and creaturely" = "Animals as neighbours and quarry: a crab crossing the lamplit sand, a turtle in black water. They come into the light and leave it."
+"geological" = "Volcanic islands at night: a black basalt peak against a red sky, wet lava rock along the shore."
+"metallic and ore" = "Metal as what the ships brought: a brass lamp, a ship's bell at the wharf, a fish hook catching a glint."
+"glass and ceramic" = "Glass from the traders and the sea: a hurricane lamp's chimney, a green glass float washed up in the dark."
+"architectural" = "Thatched houses, the pastor's church and the wharf sheds, mostly in shadow: a doorway with a lamp, a church gable caught by the moon."
+"domestic interior" = "The inside of a thatched house at night, open to the dark: a mat and a lamp, a sleeper and a guitar against the wall."
+"mechanical" = "The few machines that reached the islands: a schooner's winch, a phonograph on a porch, an old car's headlamps on the coast road."
+"industrial and infrastructural" = "The copra trade and the port: copra drying on racks by firelight, a steamer at the wharf with one light lit."
+"agricultural and cultivated" = "Gardens of taro, breadfruit and vanilla, cut out of the dark by a lamp: a basket of fruit, rows of taro in black water."
+"aquatic" = "The lagoon, the reef and the open sea at night: moonlight on still water, surf white on the reef."
+"atmospheric" = "Night air thick with heat and weather: a squall line over the sea, smoke from an earth oven across the moon."
+"glacial and frozen" = "Cold as the islands know it: rain on a night canoe, the chill of the deep sea, ice in a trader's bar glass. Never snow."
+"fire and ember" = "Fire as the only light that matters: a beach bonfire, torches over the reef, embers in an earth oven."
+"textile and fiber" = "Cloth and fibre held by the light: a printed pareu, tapa cloth, a pandanus mat, a flower crown being strung."
+"ritual object" = "Carved and sacred things: a tiki on its platform, a canoe prow, a garland left on a stone."
+"paper and inscription" = "Paper from outside: a letter from a ship, a hymn book in church, a trader's ledger by lamplight. Writing appears as marks, never a readable sentence."
+"instrument and measure" = "Music and the sea's measures: a ukulele and a slit drum, a navigator's shell chart, a ship's compass in its binnacle."
+
+[velvet]
+label = "Black Velvet"
+suffix_base = "A mid-century oil painting on black velvet in the manner of Edgar Leeteg's Tahitian paintings. One warm light from the side, like firelight or moonlight; whatever turns away from it dissolves completely into the black velvet. Lit forms glow in layered amber, copper and bronze glazes with crisp bright highlights, sculpted and lit from within. Saturated reds and yellows against deep black. The soft nap of the velvet shows across the whole image, with the paint sitting on top of the fibres. Restrained composition, a 1940s Polynesian fine-art painting. No text or lettering."
+suffix_figures = " Only if a person is explicitly part of the scene described above: realistic anatomy and an individual face rather than a generic type, a calm, absorbed or slightly melancholy expression, skin in warm amber and bronze with crisp highlights on cheekbone, collarbone and shoulder, the shadow side melting into the black."
+space = [
+  "from a lamplit porch across the dark beach to moonlight on the lagoon",
+  "along a black shore where bonfires grow smaller toward the point",
+  "from the stern of a canoe across black water to a lit reef",
+  "past black palm trunks to a red sunset sinking into the sea",
+  "from the stone platform of a marae down to the lights of a village",
+  "across a still lagoon to a basalt peak against a moonlit cloud",
+  "down the wharf past the steamer to the dark town",
+]
