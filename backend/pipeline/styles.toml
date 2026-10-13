@@ -1051,3 +1051,86 @@ space = [
   "a forest hunt running from the near margin into the trees",
   "from a tower over a calendar of fields",
 ]
+
+
+# CHARTER, 2026-10-12 (new style, written to docs/charter-schema.md): the
+# 1970s Black action cinema of the grindhouse era and the gonzo homages it
+# inspired: Black heroes at the centre of a funk-scored city, cool as a law
+# of physics, violence fast and theatrical. No character, film or director
+# names, since whatever a charter names turns up in the image. The pimp in
+# furs and the lone hero's gun-pointing poster pose are demoted.
+[funk.world]
+era = "An American city in 1973 that is louder and cooler than the real one ever was: brownstones, tenements, soul clubs, pool halls, storefront churches and elevated trains, run by a syndicate and crooked cops and taken back block by block. Technology is the muscle car, the pay phone, the hi-fi, the switchblade and the snub-nosed revolver."
+materials = "Black leather, suede and fur trim, wide-lapelled polyester in loud prints, chrome and candy paint, gold chains and big rings first, then brick, neon tube, wood panelling, shag carpet, vinyl booths and wet asphalt."
+physics = "Cool is a law of nature: a hero's coat falls right in the middle of a fight, the righteous walk through crossfire, a muscle car clears an impossible gap. Violence is fast, staged and bright, with blood the red of a poster, never gore. Conjure is real in the old neighbourhoods and works through roots, graves and candles. Light comes from streetlamps, neon, headlights, club lights and a hot summer sun, and nothing else glows."
+society = "Neighbourhoods that look after their own, with block parties, Sunday church, rent parties, barbershops, record stores and corner games, under a syndicate that runs the numbers and the precinct. Days here are music, dancing, cookouts, card games and long cruises down the avenue as much as the fight."
+weather = "The whole range: a heat wave with hydrants open, rain on neon at three in the morning, a smoggy orange dusk over the skyline, a snowy night outside a club, a storm over the docks. Pick what the day calls for."
+inhabitants = "Black heroes at the centre: private eyes, nurses and women out for revenge, kung fu masters, ex-soldiers, musicians, preachers and community organisers; their crews and their neighbours; root doctors and the restless dead; and against them, syndicate men and crooked cops. They are as often dancing, eating or holding court as fighting."
+strangeness = "The strange is gonzo excess that nobody questions: a fight that stops a whole street, an entrance that turns every head, a car that does what no car can. People react to it with a nod, as if this is what Tuesdays are for."
+numinous = "The sacred has a body and a voice: a storefront preacher whose sermon shakes the windows, a soul singer holding a room still, a root doctor's altar of candles and photographs, the dead risen to settle a debt. Never an aura or a beam."
+dread = "This world at its darkest is the shakedown and the payback: a shootout in a stairwell, a burning tenement, a body in the river, the syndicate's men at the door. Fast and theatrical, blood bright as poster paint, never gore, and the frame does not take sides."
+favoured_actors = "Crews and pairs, crowds at a club or a block party, a hero against a room full of enemies, neighbours, musicians, and the dead come back. A pimp in furs and a lone hero pointing a gun in a poster pose are this genre's most worn images and should not be the default."
+myth = "Black American folklore and its heroes, from Stagolee and John Henry to the trickster who outwits the powerful; Southern hoodoo and conjure; the Western and the revenge tale; Hong Kong kung fu cinema; crime pulp; the gospel church; and the cosmic jazz of Afrofuturism."
+highlight = "The thing the eye finds first: a moment of cool or of payback at its peak, or a conjure made flesh. Today's kind of wrongness is given with this definition. Painted as boldly and brightly as everything else."
+highlight_modes = [
+  "an entrance so cool the whole street stops for it",
+  "a car doing what no car can",
+  "a fight frozen at its peak",
+  "an ordinary object turned into a weapon",
+  "a conjure or a curse made flesh",
+]
+
+[funk.brief]
+signature = "SIGNATURE — at least one thing marks this as the 1970s funk city, named explicitly: a towering afro or a leather maxi coat, a candy-painted muscle car, platform boots, a soul club's marquee, or a kung fu kick on a city street. It may be the highlight or the actor. A frame that could be any modern city or any period drama is a failed response."
+temper = "TEMPER — the highlight, and anything numinous in the frame, is in this temper: {wonderTone}"
+
+[funk.verbs]
+process_hard = ["skidding", "screeching", "ricocheting", "blowing out", "going up in flames", "spraying glass", "jackknifing", "splashing red", "slamming shut", "caving under the impact", "fishtailing", "riddling with holes", "smashing through", "crumpling", "bursting into the street", "kicking in", "tearing off its hinges", "shuddering", "sizzling", "going dark"]
+process_soft = ["grooving", "spinning on the turntable", "steaming off the asphalt", "buzzing in the tube", "wavering over the blacktop", "gleaming under the streetlamp", "spraying from the hydrant", "rolling slowly by", "swinging on its chain", "fluttering in the breeze", "glittering on the dance floor", "curling up as cigarette smoke", "sweating in the glass", "simmering on the stove", "humming along", "pulsing with the bass", "shining like new", "drying on the line", "cooling on the stoop", "fading into the dusk"]
+actor_hard.work = ["staking out", "shaking down", "kicking down the door of", "chasing across", "pinning against", "squaring up to", "busting up"]
+actor_hard.rest = ["laying low in", "lying in wait at", "nursing a wound in"]
+actor_hard.play = ["shooting pool in", "playing high-stakes poker in", "racing down"]
+actor_hard.ritual = ["laying a curse on", "raising the dead at", "swearing vengeance over"]
+actor_hard.travel = ["tearing down the avenue in", "leaping between rooftops toward", "running the gauntlet through", "storming into", "bailing out across"]
+actor_soft.work = ["spinning records at", "cutting hair in", "frying fish at", "tuning up a car in", "organising a block on", "running a numbers book from"]
+actor_soft.rest = ["holding court at", "lounging in a booth at", "sitting on the stoop of", "cooling off by the hydrant on"]
+actor_soft.play = ["doing the hustle at", "jamming at", "playing dominoes on", "throwing a block party on"]
+actor_soft.ritual = ["singing gospel in", "lighting candles at", "dressing a root altar in"]
+actor_soft.travel = ["cruising down", "strutting along", "riding the elevated train past", "pulling up outside", "rolling deep into"]
+
+[funk.registers]
+"botanical" = "Green in a hard city: a rooftop garden of tomatoes and collards, a root doctor's herbs hung to dry, weeds through a vacant lot. Its highlight: a plant used for conjure."
+"bodily and anatomical" = "The body as style and as power: an afro, a fighter's poised muscle, sweat on a dancer. Blood is bright poster red, never gore."
+"fungal and decaying" = "Decay as the city's neglect: a condemned tenement, a boarded-up theatre, a cemetery gone to weeds where the dead stir."
+"animal and creaturely" = "Animals of the city and the conjure: a pit bull on a chain, pigeons on a rooftop, a black cat at the root doctor's door, a snake in a jar."
+"geological" = "Stone as the city's bones: brownstone stoops, a granite bank front, a quarry outside town where bodies are dumped."
+"metallic and ore" = "Chrome and gold: a muscle car's bumper, gold chains and rings, a snub-nosed revolver, a brass shell casing."
+"glass and ceramic" = "Glass as the stage for violence and style: a plate-glass window about to shatter, mirrored shades, a glitter ball."
+"architectural" = "The 1970s city: tenements and brownstones, a soul club's marquee, a storefront church, an elevated railway over the street."
+"domestic interior" = "The 1970s home and pad: shag carpet, wood panelling, a waterbed, a hi-fi console, a kitchen with a pot on the stove."
+"mechanical" = "Machines of style and speed: a muscle car, a jukebox, a pinball machine, a motorcycle with long forks."
+"industrial and infrastructural" = "The hard city: the docks, a warehouse, the subway, a freeway overpass, a junkyard of crushed cars."
+"agricultural and cultivated" = "The South the city came from: a sharecropper's field, a family farm, a church picnic under pecan trees."
+"aquatic" = "Water in the city: an open hydrant in a heat wave, rain on neon, a public pool, the river by the docks."
+"atmospheric" = "City air: smog at dusk, steam from a manhole, cigarette smoke in a club, a heat haze over the asphalt."
+"glacial and frozen" = "Winter in the city: snow on a muscle car, breath steaming outside a club, ice on the river."
+"fire and ember" = "Fire as payback and as warmth: a car going up, a burning warehouse, a trash-can fire on a corner, candles on an altar."
+"textile and fiber" = "Clothes as armour: a leather maxi coat, a velvet suit, a jumpsuit, a fur-trimmed collar, a dashiki."
+"ritual object" = "The sacred of the neighbourhood: a church tambourine, a root doctor's mojo bag, a candle with a saint on it, a gold cross."
+"paper and inscription" = "Papers of the street: numbers slips, a wanted poster, a record sleeve, a stack of cash. Writing appears as marks, never a readable sentence."
+"instrument and measure" = "Music and the hustle: a saxophone, a congas drum, a turntable, a pay phone, a set of scales in a back room."
+
+[funk]
+label = "Grindhouse Funk"
+suffix_base = "A 1970s painted exploitation-movie poster with grindhouse film wear: bold heroic figures and cars in airbrushed gouache, hard rim light and deep black shadow, saturated burnt orange, hot magenta, harvest gold and avocado green against black. Dramatic low angles and strong foreshortening, a slightly scratched, faded print with film grain and worn paper texture. Not photographic and not digital. No text, title or lettering."
+suffix_figures = " Only if a person is explicitly part of the scene described above: people are painted as heroic, glamorous and supremely confident, with strong, stylised anatomy and 1970s hair and clothes, in the same bold airbrushed style as everything else, never photographic and never caricatured."
+space = [
+  "down a rain-slick avenue of neon to the elevated train",
+  "across rooftops and water towers to the skyline at dusk",
+  "through a club's doorway onto the dance floor and the stage",
+  "along the docks past warehouses to the bridge",
+  "down a tenement stairwell to the street below",
+  "across a junkyard of crushed cars to the city",
+  "from a stoop across a block party to the far corner",
+  "along a freeway overpass to the downtown towers",
+]
