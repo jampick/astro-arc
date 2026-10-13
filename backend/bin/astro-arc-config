@@ -38,6 +38,11 @@
 #                                          astro-arc-detect-resolution)
 #   --set-art-style <key>                 which pipeline/styles.toml preset
 #                                          Stage 2's prompt is suffixed with
+#   --set-rotate-styles <true|false>      each scheduled run moves to the next
+#                                          style (style_rotation.py); a manual
+#                                          Regenerate keeps the selected one
+#   --set-hidden-styles <k1,k2|"">        styles left out of the Style dropdown
+#                                          and the rotation
 #   --set-provider <openai>                 which AI provider everything else is
 #                                          scoped to — the key you paste, which
 #                                          models are offered, what they cost.
@@ -109,7 +114,7 @@ CONFIG_FILE="$HOME/.local/state/omarchy/settings/astro-arc.json"
 # that costs nothing is the only one safe to choose on a new user's behalf.
 # A frequency already written to CONFIG_FILE still wins — these are only the
 # values a missing key falls back to (see the jq merge in read_config).
-DEFAULTS='{"birthDate":"","birthTime":"","birthTimeUnknown":false,"locationName":"","latitude":null,"longitude":null,"timezone":"","frequency":"manual","imageBackend":"openai","openaiModel":"","openaiQuality":"","stage1Model":"gpt-4o-mini","stage2Model":"gpt-4o-mini","backgroundSize":"auto","artStyle":"symbolist","themeGenerator":"built-in","backgroundOnly":true,"historyRetentionDays":30,"maxCostPerImage":0,"provider":"openai"}'
+DEFAULTS='{"birthDate":"","birthTime":"","birthTimeUnknown":false,"locationName":"","latitude":null,"longitude":null,"timezone":"","frequency":"manual","imageBackend":"openai","openaiModel":"","openaiQuality":"","stage1Model":"gpt-4o-mini","stage2Model":"gpt-4o-mini","backgroundSize":"auto","artStyle":"symbolist","themeGenerator":"built-in","backgroundOnly":true,"historyRetentionDays":30,"maxCostPerImage":0,"provider":"openai","rotateStyles":false,"hiddenStyles":[]}'
 COORDS_PATTERN='^-?[0-9]+(\.[0-9]+)?,-?[0-9]+(\.[0-9]+)?$'
 # IANA zone names: Area/Location[/Sub], plus the bare ones like UTC. Letters,
 # digits, _ + - only, so nothing a shell or jq could read as syntax.
@@ -215,6 +220,20 @@ case "${1:-}" in
   updated=$(jq --arg s "$2" '.artStyle=$s' <<<"$current")
   write_config "$updated"
   ;;
+--set-rotate-styles)
+  [[ ${2:-} =~ ^(true|false)$ ]] || { echo "Usage: astro-arc-config --set-rotate-styles <true|false>" >&2; exit 1; }
+  current=$(read_config)
+  updated=$(jq --argjson r "$2" '.rotateStyles=$r' <<<"$current")
+  write_config "$updated"
+  ;;
+# Names the styles to leave out, comma-separated, "" for none. Leaving out
+# rather than opting in means a style added later shows up on its own.
+--set-hidden-styles)
+  [[ $# -ge 2 && ${2:-} =~ ^([a-z0-9_-]+(,[a-z0-9_-]+)*)?$ ]] || { echo "Usage: astro-arc-config --set-hidden-styles <key[,key...]|\"\">" >&2; exit 1; }
+  current=$(read_config)
+  updated=$(jq --arg s "$2" '.hiddenStyles=($s | split(",") | map(select(. != "")))' <<<"$current")
+  write_config "$updated"
+  ;;
 --set-provider)
   [[ ${2:-} =~ ^(openai)$ ]] || { echo "Usage: astro-arc-config --set-provider <openai>" >&2; exit 1; }
   current=$(read_config)
@@ -253,7 +272,7 @@ case "${1:-}" in
   write_config "$updated"
   ;;
 *)
-  echo "Usage: astro-arc-config [--set-birth <date> <time|unknown>|--set-location <name> [lat,lon] [timezone]|--set-timezone <tz>|--clear-location|--set-frequency <hourly|daily|weekly|monthly|manual>|--set-image-backend <local|openai>|--set-openai-model <model> [quality]|--set-stage1-model <model>|--set-stage2-model <model>|--set-background-size <auto|WxH>|--set-art-style <key>|--set-theme-generator <built-in|aether>|--set-background-only <true|false>|--set-history-retention-days <N>]" >&2
+  echo "Usage: astro-arc-config [--set-birth <date> <time|unknown>|--set-location <name> [lat,lon] [timezone]|--set-timezone <tz>|--clear-location|--set-frequency <hourly|daily|weekly|monthly|manual>|--set-image-backend <local|openai>|--set-openai-model <model> [quality]|--set-stage1-model <model>|--set-stage2-model <model>|--set-background-size <auto|WxH>|--set-art-style <key>|--set-rotate-styles <true|false>|--set-hidden-styles <keys>|--set-theme-generator <built-in|aether>|--set-background-only <true|false>|--set-history-retention-days <N>]" >&2
   exit 1
   ;;
 esac

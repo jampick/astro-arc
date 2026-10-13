@@ -35,7 +35,14 @@ var DEFAULT_CONFIG = {
   backgroundOnly: true,
   historyRetentionDays: 30,
   maxCostPerImage: 0,
-  provider: "openai"
+  provider: "openai",
+  // Off by default. On, every scheduled run moves to the next style in a
+  // shuffle bag (backend/bin/style_rotation.py); Regenerate keeps the one
+  // the dropdown shows.
+  rotateStyles: false,
+  // Styles left out of both the dropdown and the rotation. A list of what to
+  // drop rather than what to keep, so a style added later shows up.
+  hiddenStyles: []
 }
 
 // How many days one "Themes Generated" entry represents, by frequency —
@@ -281,11 +288,34 @@ function parseConfig(raw) {
       // Falls back to the legacy imageBackend so an existing config keeps
       // working, including one that still says "local".
       provider: typeof data.provider === "string" && data.provider !== ""
-        ? data.provider : (typeof data.imageBackend === "string" && data.imageBackend !== "" ? data.imageBackend : "openai")
+        ? data.provider : (typeof data.imageBackend === "string" && data.imageBackend !== "" ? data.imageBackend : "openai"),
+      rotateStyles: data.rotateStyles === true,
+      hiddenStyles: stringList(data.hiddenStyles)
     }
   } catch (e) {
     return Object.assign({}, DEFAULT_CONFIG)
   }
+}
+
+function stringList(value) {
+  return Array.isArray(value) ? value.filter(function(v) { return typeof v === "string" && v !== "" }) : []
+}
+
+// The Style dropdown's rows: every style not hidden, plus the selected one
+// even when hidden, so hiding the current style never changes it silently.
+function visibleStyleChoices(config) {
+  var hidden = config.hiddenStyles || []
+  return ART_STYLE_CHOICES.filter(function(s) {
+    return hidden.indexOf(s.key) < 0 || s.key === config.artStyle
+  })
+}
+
+// The Styles setting shows what is IN while the config stores what is left
+// OUT. Each converts to the other by taking the rest.
+function otherStyleKeys(keys) {
+  return ART_STYLE_CHOICES.map(function(s) { return s.key }).filter(function(k) {
+    return (keys || []).indexOf(k) < 0
+  })
 }
 
 // astro-arc-apikey status's output: {"present":true,"masked":"sk-...ab12"}
@@ -611,6 +641,8 @@ if (typeof module !== "undefined") {
     DEFAULT_CONFIG: DEFAULT_CONFIG,
     OPENAI_MODEL_CHOICES: OPENAI_MODEL_CHOICES,
     ART_STYLE_CHOICES: ART_STYLE_CHOICES,
+    visibleStyleChoices: visibleStyleChoices,
+    otherStyleKeys: otherStyleKeys,
     THEME_GENERATOR_CHOICES: THEME_GENERATOR_CHOICES,
     PROVIDER_CHOICES: PROVIDER_CHOICES,
     FREQUENCY_CHOICES: FREQUENCY_CHOICES,

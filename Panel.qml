@@ -901,6 +901,29 @@ Panel {
     onExited: function(exitCode) { if (exitCode === 0) root.configFile.reload() }
   }
 
+  // ---- Style rotation: scheduled runs move through a shuffle bag of every
+  // style not hidden (backend/bin/style_rotation.py). The config stores the
+  // hidden list; the Styles setting shows the complement. --------------------
+  function commitRotateStyles(value) {
+    rotateStylesWriteProc.command = [root.configBin, "--set-rotate-styles", value ? "true" : "false"]
+    rotateStylesWriteProc.running = true
+  }
+
+  function commitShownStyles(keys) {
+    hiddenStylesWriteProc.command = [root.configBin, "--set-hidden-styles", Model.otherStyleKeys(keys).join(",")]
+    hiddenStylesWriteProc.running = true
+  }
+
+  Process {
+    id: rotateStylesWriteProc
+    onExited: function(exitCode) { if (exitCode === 0) root.configFile.reload() }
+  }
+
+  Process {
+    id: hiddenStylesWriteProc
+    onExited: function(exitCode) { if (exitCode === 0) root.configFile.reload() }
+  }
+
   // ---- Theme generator: "built-in" (palette_extract.py, default) or
   // "aether" (shells out to Omarchy's own theme generator for a richer
   // theme — see palette_extract.py's icons.theme comment for why the
@@ -1739,6 +1762,44 @@ Panel {
             }
 
             PanelSeparator { foreground: root.bar.foreground }
+            PanelSectionHeader { text: "STYLES"; foreground: root.bar.foreground }
+
+            // ---- Which styles the Style dropdown offers and Rotate styles
+            // moves through. One list for both: a hidden style is out of
+            // each. ---------------------------------------------------------
+            Item {
+              width: parent.width
+              height: Math.max(shownStylesLabel.implicitHeight, shownStylesSelect.implicitHeight)
+
+              Text {
+                id: shownStylesLabel
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+                width: root.labelColW
+                text: "Shown"
+                color: Qt.darker(root.bar.foreground, 1.3)
+                font.family: root.bar.fontFamily
+                font.pixelSize: Style.font.bodySmall
+              }
+
+              MultiSelect {
+                id: shownStylesSelect
+                anchors.left: shownStylesLabel.right
+                anchors.leftMargin: Style.space(8)
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+                showLabel: false
+                values: Model.otherStyleKeys(root.configState.hiddenStyles)
+                options: Model.ART_STYLE_CHOICES.map(function(s) {
+                  return { value: s.key, label: s.label }
+                })
+                noSelectionText: "All hidden"
+                foreground: root.bar.foreground
+                onChanged: function(values) { root.commitShownStyles(values) }
+              }
+            }
+
+            PanelSeparator { foreground: root.bar.foreground }
             PanelSectionHeader { text: "THEME"; foreground: root.bar.foreground }
 
             // ---- Theme generator: which tool turns the rendered image
@@ -2287,12 +2348,24 @@ Panel {
               anchors.verticalCenter: parent.verticalCenter
               showLabel: false
               value: root.configState.artStyle
-              options: Model.ART_STYLE_CHOICES.map(function(s) {
+              options: Model.visibleStyleChoices(root.configState).map(function(s) {
                 return { value: s.key, label: s.label }
               })
               foreground: root.bar.foreground
               onChanged: function(value) { root.commitArtStyle(value) }
             }
+          }
+
+          Toggle {
+            width: parent.width
+            label: "Rotate styles"
+            description: root.configState.rotateStyles
+              ? "Each scheduled background uses the next style. Regenerate keeps the one above."
+              : "Every background uses the style above"
+            checked: root.configState.rotateStyles
+            foreground: root.bar.foreground
+            fontFamily: root.bar.fontFamily
+            onClicked: root.commitRotateStyles(!root.configState.rotateStyles)
           }
 
           PanelSeparator { foreground: root.bar.foreground }
