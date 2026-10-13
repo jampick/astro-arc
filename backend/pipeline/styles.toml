@@ -1051,3 +1051,85 @@ space = [
   "a forest hunt running from the near margin into the trees",
   "from a tower over a calendar of fields",
 ]
+
+
+# CHARTER, 2026-10-12 (new style, written to docs/charter-schema.md): the
+# atomic retro-future after the bombs: a 1950s America that kept going for a
+# century on the atom, then the wasteland its survivors rebuild from scrap.
+# No franchise names anywhere, since whatever a charter names turns up in the
+# image. The lone armoured wanderer silhouetted against ruins is demoted.
+[atomic.world]
+era = "An America that kept the 1950s for a hundred years, with the atom running everything, and then lost it in one afternoon of bombs. The world after is the old future's leftovers: big, rounded, vacuum-tube technology built to last forever and now kept going by survivors with scrap, tape and know-how."
+materials = "Enamelled sheet steel in faded mint, cream and cherry red, chrome trim, bakelite and cracked concrete first, then sun-bleached wood, canvas, corrugated iron and sand. Old things are factory-made and rounded; new things are cobbled together from the old."
+physics = "Radiation is real and shows only in what it has done: animals grown huge or doubled, plants twisted, people scarred, ground cratered. Everything strange has a scientific cause, usually a bad one; there is no magic. Light comes from the sun, fire, bulbs, neon and the sickly green of anything hot with radiation, and nothing else glows."
+society = "Small settlements built from salvage around a water pump or a wrecked vehicle, trading caravans with pack beasts, sealed underground shelters whose people come up blinking, raider camps and makeshift town councils. Days here are trading, cooking, card games, dances to an old record, weddings and long walks between towns as much as scavenging and fighting."
+weather = "The whole range: hard desert sun, a dust storm, a green-tinged radiation storm full of lightning, rain on rusted roofs, a cold clear night of stars, a sunset turned blood red by dust. Pick what the day calls for."
+inhabitants = "Settlers, traders and scavengers; people from the sealed shelters in matching jumpsuits; household robots still at the chores they were built for; survivors whose skin radiation has burned away; and animals grown huge or doubled. They are as often off work as on it."
+strangeness = "Strangeness is science's fallout and nobody remarks on it: a giant insect crossing the road is a traffic problem, and a robot still laying a table for a family long dead is just part of the house."
+numinous = "The sacred is the bomb and what is left of the old world: a congregation kneeling before an unexploded warhead, a roadside shrine of advertising mascots and bottle caps, a preacher on a reactor dome. It has a body and a congregation, never a halo or an aura."
+dread = "This world at its darkest is the end coming again: a mushroom cloud rising on the horizon, a shelter whose door never opened, a town picked clean, a radiation storm rolling in. Bright and matter-of-fact, and the frame does not take sides."
+favoured_actors = "Travellers in pairs and caravans, settlers at shared work, robots, mutated animals and swarms of them. A lone armoured wanderer silhouetted against the ruins is this genre's most worn image and should not be the default."
+myth = "The American mid-century myth: the frontier and the Western, the atomic age's promise of a gleaming tomorrow and its duck-and-cover fear, the B-movie monster, Cold War doomsday prophecy, and the Book of Revelation as the radio preachers tell it."
+highlight = "The thing the eye finds first: something the bomb made, or something the old future left behind, still going about its business. Today's kind of wrongness is given with this definition. Painted as cleanly and brightly as everything else."
+highlight_modes = [
+  "an animal mutated far past its kind",
+  "a machine still doing the job it was made for in a world that no longer needs it",
+  "a pre-war advertising mascot at monstrous scale",
+  "a person changed by radiation going about an ordinary day",
+  "something radioactive treated as a household convenience",
+]
+
+[atomic.brief]
+signature = "SIGNATURE — at least one thing marks this as the atomic retro-future after the bombs, named explicitly: rounded chrome-and-fin 1950s design run on atomic power, a vacuum-tube robot, a mutated creature, or a cheerful pre-war advertisement standing among ruins. It may be the highlight. A frame that could be any modern ruin or any desert is a failed response."
+temper = "TEMPER — the highlight, and anything numinous in the frame, is in this temper: {wonderTone}"
+
+[atomic.verbs]
+process_hard = ["rusting to lace", "crackling with static", "melting down", "collapsing in a cloud of dust", "short-circuiting", "sandblasting", "leaking coolant", "crashing down", "mutating", "detonating", "warping in the heat", "sinking into the sand", "flaring green", "rattling apart", "blowing over", "contaminating", "spitting sparks", "tipping over", "burning out", "irradiating"]
+process_soft = ["ticking like a Geiger counter", "whistling", "warming up", "sputtering", "bubbling green", "glinting chrome", "spinning slowly", "hissing", "flickering on", "blooming through the rubble", "sprouting", "creaking", "swinging on a sign chain", "rolling across the sand", "puffing steam", "playing on the radio", "shimmering in the heat", "glowing faintly green", "drifting on the wind", "settling into dust"]
+actor_hard.work = ["scavenging", "barricading", "patching", "shooting at", "jury-rigging", "digging out of the rubble", "towing with a winch"]
+actor_hard.rest = ["sheltering in", "hiding out in", "keeping watch from"]
+actor_hard.play = ["arm-wrestling", "gambling bottle caps on", "racing jalopies"]
+actor_hard.ritual = ["praying to", "burying the dead at", "swearing an oath on"]
+actor_hard.travel = ["trekking across", "fleeing", "pushing a stalled car across", "driving a caravan through", "fording a radioactive creek"]
+actor_soft.work = ["trading at", "cooking over", "tinkering with", "farming", "repairing", "fishing in"]
+actor_soft.rest = ["lounging on", "napping in", "sipping a soda at", "listening to an old radio in"]
+actor_soft.play = ["dancing to a jukebox at", "pitching horseshoes beside", "telling stories round", "playing poker on"]
+actor_soft.ritual = ["toasting at", "holding a wedding in", "singing hymns to"]
+actor_soft.travel = ["strolling along", "riding a pack beast toward", "hitching a ride on", "heading out from", "rolling into"]
+
+[atomic.registers]
+"botanical" = "Plants that survived the bombs by changing: a cactus grown into a grove, a garden of tough mutated vegetables behind a scrap fence. Its highlight: a plant that has become something more."
+"bodily and anatomical" = "The body after radiation: skin burned away to the muscle on a cheerful shopkeeper, a second head on a pack animal. Treated as ordinary, never gore."
+"fungal and decaying" = "Decay as the old world going soft: a supermarket gone to mould, a dinner left on a table for a century, fungus grown in a shelter's damp."
+"animal and creaturely" = "Animals the atom made: insects the size of cars, a cow with two heads, a dog that is the last loyal thing in town."
+"geological" = "Desert country: mesas, canyons, dry lake beds and a crater glassed by the blast."
+"metallic and ore" = "Steel and chrome from the old world, rusting and polished back up: a car body as a house wall, a robot's dented shell."
+"glass and ceramic" = "Vacuum tubes, soda bottles, diner crockery and the windows of the old world, many of them broken: a bottle tree, a glowing tube in a repaired radio."
+"architectural" = "Googie diners, ranch houses, gas stations and office towers of the atomic age, standing ruined or patched into new use."
+"domestic interior" = "The 1950s home, a century on: a kitchen of rounded appliances still waiting for its family, a living room with a television and a hole in the roof onto the sky."
+"mechanical" = "Atomic-age machines: rounded robots, cars with tail fins and a reactor where the engine should be, a vending machine that still works. Most have been repaired many times."
+"industrial and infrastructural" = "The big works of the old future: a dam, a cooling tower, a monorail on its pylons, a highway overpass with a town built under it."
+"agricultural and cultivated" = "Farming the wasteland: rows of tough crops in irradiated soil, a herd of two-headed cattle, a greenhouse made of old car windows."
+"aquatic" = "Water as the most precious thing: a pump at the centre of a town, a radioactive pool, a drowned downtown, a flooded crater lake."
+"atmospheric" = "The sky after the bombs: dust storms, a green radiation storm with lightning, a red sunset over ruins, a clear night full of stars."
+"glacial and frozen" = "Cold and preservation: a cryogenic pod, a frozen shelter, a winter wasteland with snow on the wrecks."
+"fire and ember" = "Fire as campfire and as the end: a barrel fire in a settlement, a burning wreck on a highway, a mushroom cloud on the horizon."
+"textile and fiber" = "Clothing patched together from what is left: shelter jumpsuits, scavenged leather, a flag stitched from old signs."
+"ritual object" = "The relics and rites of the new world: an unexploded warhead as an altar, a shrine of mascots, a jukebox treated as an oracle."
+"paper and inscription" = "The paperwork and propaganda of the old world: civil defence posters, comic books, magazines and advertisements, faded and weathered. Writing appears as marks, never a readable sentence."
+"instrument and measure" = "The instruments of survival: a clicking Geiger counter, a wrist computer, a radio, a dial thermometer on a shelter door."
+
+[atomic]
+label = "Atomic Retro-Future"
+suffix_base = "A mid-century American illustration in the manner of 1950s magazine advertising and pulp paperback covers, painted in gouache: clean, confident shapes, simplified modelling with soft airbrushed gradients, and bright optimistic colour (mint, cream, turquoise, cherry red, polished chrome) set against dusty ochre and rust brown. Hard warm sunlight with crisp shadows. A slight halftone grain and printed-paper texture. Not photographic and not a modern 3D render. Any lettering appears as marks, never readable words."
+suffix_figures = " Only if a person is explicitly part of the scene described above: people are drawn as mid-century illustration figures, with clean simplified faces, expressive posture and clothes with crisp folds, painted with the same flat confidence as everything else, never photographic."
+space = [
+  "down a cracked highway past a fallen billboard to red mesas",
+  "from a shelter door in a hillside over a ruined suburb",
+  "across a dry lake bed to a skyline of broken towers",
+  "along a rail line to a water tower and a patched-up town",
+  "through a diner's shattered window onto the desert",
+  "from a rooftop across a drowned downtown",
+  "past a row of rusted tail-finned cars to the horizon",
+  "along a canyon to a great concrete dam",
+]
