@@ -1051,3 +1051,94 @@ space = [
   "a forest hunt running from the near margin into the trees",
   "from a tower over a calendar of fields",
 ]
+
+
+# CHARTER, 2026-10-12 (new style, written to docs/charter-schema.md): Frazetta's
+# sword and sorcery as his 1960s and 1970s paperback covers painted it: muscle,
+# steel, monsters and decadent sorcery in deep shadow, with his frank
+# sensuality kept at the level of those covers (partly draped, never explicit).
+# No character or franchise names, since whatever a charter names turns up in
+# the image. The barbarian on a heap of bodies with a woman at his feet is demoted.
+[frazetta.world]
+era = "A savage age that never was, after an older world drowned and before history began: barbarian hills and frozen north, jungles, deserts, and decadent walled cities ruled by sorcerer-kings. Steel and muscle settle most things, and sorcery is old, costly city magic that barbarians fear and despise."
+materials = "Muscle, sweat-lit skin, fur and hide first, then rough iron and bronze, bone and leather; in the cities gold, silk, jewels and crumbling cyclopean stone; everywhere smoke, mud and swamp water."
+physics = "Bodies are heroic, with impossible strength and endurance, but they are flesh and they bleed. Sorcery is real and rare, worked with smoke, blood and idols, and always costs its worker something. Monsters are old, huge and solitary. Light comes from a storm-torn sky, a low red sun, fire and torches; a sorcerer's fire may burn a sickly colour, and nothing else glows."
+society = "Barbarian tribes, mercenary companies, thieves' quarters, pirate crews, slave markets and the courts of decadent queens and sorcerer-kings. Days here are feasts, drinking, brawls for sport, dancing, love, rest by a fire and long rides as much as battle."
+weather = "The whole range: a sky boiling with orange and violet cloud, a blood-red sunset over a battlefield, black jungle night, a blizzard on a mountain pass, smoky gold dusk over a city. Pick what the day calls for."
+inhabitants = "Barbarian warriors and warrior women, mercenaries, thieves, pirates, queens and temple dancers, sorcerers and their priests; war-cats, wolves, great apes and serpents far larger than life; and the ancient things that lair under the cities. They are as often feasting, resting or in love as fighting."
+strangeness = "Strangeness is a threat to be met with steel: monsters and sorcery are real, and nobody here is surprised by them, only ready."
+numinous = "The sacred is an idol with a body and an appetite: a serpent god coiled round a temple column, a bronze idol with smoke rising from its mouth, a demon dragged up from a pit. It is solid and painted in the same dark oils as everything else, never an aura or a beam."
+dread = "This world at its darkest is the last stand on a hill of the dead, a sacrifice on an altar, a city falling to fire, a beast dragging someone down into the swamp. Painted with the same heroic energy as a feast; blood is shown, mutilation is not, and the frame does not take sides."
+favoured_actors = "Pairs and warbands, a warrior and a beast locked in struggle, crowds in a city, a sorcerer and the thing he raised, animals at full strength. A lone barbarian standing on a heap of bodies with a woman clinging to his leg is this painter's most worn image and should not be the default."
+myth = "Pulp sword and sorcery and the myths it borrowed: Norse sagas and the berserker, Atlantis and other drowned kingdoms, the serpent and beast gods of Mesopotamia and Egypt, the thieves and djinn of the Arabian Nights, and the elder things of Lovecraft."
+highlight = "The thing the eye finds first: force or sorcery at its peak, a body or a beast at full strain, or a god or monster in its body. Today's kind of wrongness is given with this definition. Painted in the same loose, dark oils as everything else."
+highlight_modes = [
+  "a beast far larger and older than its kind",
+  "a sorcery visibly costing the one who works it",
+  "an idol or god that has begun to move",
+  "a body at the very limit of its strength",
+  "a relic of a drowned elder kingdom still at work",
+]
+
+[frazetta.brief]
+signature = "SIGNATURE — at least one thing marks this as savage sword and sorcery, named explicitly: an axe or broadsword in a powerful hand, a fur-clad barbarian, a sorcerer's idol, or a primeval beast. It may be the highlight or the actor. A scene that could be any fantasy illustration or any historical battle is a failed response."
+allure = "ALLURE — whenever people are in frame, at least one is painted with this artist's frank sensuality: a powerful, partly bare body in fur, hide, silk or jewellery, skin catching the warm light, in a pose of strength, effort or ease rather than one held for the viewer. Bodies are always partly draped or armoured; never full nudity and never a sexual act. A frame of fully clothed, sexless figures is a failed response."
+temper = "TEMPER — the highlight, and anything numinous in the frame, is in this temper: {wonderTone}"
+
+# LIGHT: the global "full, even daylight" for high exposure cannot hold in a
+# painter whose frames are half lost in shadow.
+[frazetta.light]
+lo = "It is night, a cave or a temple's depths. At least two thirds of the frame is dark, lit only by fire, torches or a sorcerer's flame. A frame that is mostly well lit is a failed response."
+mid = "Dusk, storm light or firelight: a strong warm key light from one side, with lit and shadowed areas both substantial. A frame in flat light is a failed response."
+hi = "A hot low sun or a storm-split sky blazing on the scene: a strong warm key light raking across it, with at least a third of the frame still in deep shadow. Flat, even daylight is a failed response."
+
+[frazetta.verbs]
+process_hard = ["falling with a crash", "erupting from below", "splintering under the blow", "spurting", "collapsing in flames", "breaking like a skull", "ripping free", "thundering", "writhing", "constricting", "sinking into the swamp", "bleeding", "rending flesh", "exploding into smoke", "giving way", "swallowing whole", "smashing open", "roaring", "boiling up from the pit", "toppling from the heights"]
+process_soft = ["smouldering low", "coiling", "steaming in the cold", "rippling with muscle", "glowing in the brazier", "curling up as smoke", "dripping from the leaves", "sighing", "glittering", "lapping at the stones", "draping", "basking on a warm rock", "stirring", "breathing slowly", "flickering in the torchlight", "whispering in the reeds", "shimmering", "pooling in the dark", "spreading its wings", "cooling on the blade"]
+actor_hard.work = ["hacking through", "wrestling", "hurling a spear at", "cleaving", "dragging free", "driving off with steel", "swinging an axe at"]
+actor_hard.rest = ["crouching in ambush at", "binding wounds at", "hiding from"]
+actor_hard.play = ["brawling in", "carousing in", "hunting down"]
+actor_hard.ritual = ["sacrificing at", "summoning from", "defiling"]
+actor_hard.travel = ["charging across", "riding hard through", "scaling a cliff toward", "escaping from", "storming"]
+actor_soft.work = ["forging a blade at", "skinning a kill at", "sharpening steel by", "hunting game in", "taming", "standing guard at"]
+actor_soft.rest = ["lounging on furs at", "bathing beneath", "sleeping beside", "drinking wine in"]
+actor_soft.play = ["dancing in", "feasting in", "wrestling for sport at", "embracing in"]
+actor_soft.ritual = ["making an offering to", "reading omens in", "anointing an idol in"]
+actor_soft.travel = ["riding toward", "sailing to", "wandering through", "walking barefoot across", "leading a beast across"]
+
+[frazetta.registers]
+"botanical" = "Jungle and dark forest as an enemy and a hiding place: vines as thick as a body, a carnivorous flower in a temple courtyard. Its highlight: a plant that hunts."
+"bodily and anatomical" = "The body as this world's great subject: muscle under strain, sweat-lit skin, a warrior's scars. Blood where the day calls for it, never mutilation."
+"fungal and decaying" = "Rot as the mark of sorcery and age: a dead god's swamp, a ruined palace gone soft with moss and bones."
+"animal and creaturely" = "Beasts at full strength and far larger than life: a war-cat, a giant serpent, a wolf pack in snow, a war-horse rearing."
+"geological" = "Wild country as the painter's dark backdrop: crags against a storm, a cave mouth, a rocky hill crowned with the fallen."
+"metallic and ore" = "Steel and gold as the age's two loves: a notched broadsword, a heaped treasure, a bronze helm, chains."
+"glass and ceramic" = "Rare and decadent: a jewel the size of a fist in an idol's eye, wine jars in a palace, a sorcerer's crystal."
+"architectural" = "Cyclopean ruins and decadent cities: a temple stair, a tower of black stone, a palace terrace over the sea."
+"domestic interior" = "Throne rooms, taverns and tents opened onto the night: furs over a couch, a feast table, a window over a burning city."
+"mechanical" = "The few machines of a savage age: a war chariot, a siege tower, a galley's oars, a trap in a temple."
+"industrial and infrastructural" = "The great works of tyrants: a quarry worked by slaves, a city wall under siege, a bridge over a chasm."
+"agricultural and cultivated" = "Settled land as something to defend or burn: a barbarian village's fields, a palace garden of strange fruit."
+"aquatic" = "Water as danger: a swamp with something under it, a pirate galley in a storm, a sacred pool in a temple."
+"atmospheric" = "The sky as the painting's drama: storm cloud boiling orange and violet, smoke from a burning city, a blood-red sun."
+"glacial and frozen" = "The frozen north: a blizzard on a pass, warriors in furs, a frost giant's ice."
+"fire and ember" = "Fire as battle and as sorcery: a burning city, torches in a cave, a sorcerer's brazier."
+"textile and fiber" = "Fur, hide, silk and banners: a cloak of wolf pelt, a dancer's veils, a torn war banner."
+"ritual object" = "The apparatus of dark worship: an altar stained dark, an idol, a sacrificial dagger, a skull cup."
+"paper and inscription" = "Scrolls and carved tablets of forbidden lore, and runes on a stone or a blade. Writing appears as marks, never a readable sentence."
+"instrument and measure" = "War horns, drums and the sorcerer's tools: a war horn sounding from a hill, a bronze astrolabe in a tower."
+
+[frazetta]
+label = "Barbarian Pulp"
+suffix_base = "A dramatic oil painting in the manner of Frank Frazetta's 1960s and 1970s fantasy paperback covers: loose, energetic brushwork, forms modelled in strong warm light against deep, murky shadow that dissolves into dark umber and olive, with hot accents of orange, crimson and gold. Turbulent sky, smoke and mist painted wet into wet. A strong diagonal composition with much of the frame lost in darkness. Visible canvas texture, not digital or photographic. No text or lettering."
+suffix_figures = " Only if a person is explicitly part of the scene described above: people are heroically muscled and sensual, with powerful anatomy and weight and tension in every limb, skin glowing warm against the dark, partly draped in fur, hide, silk or armour, painted with the same loose energy as everything else, never photographic."
+space = [
+  "from a cliff edge over a battlefield to a burning city",
+  "up a temple stair to an idol against a storm sky",
+  "across a swamp to a ruined tower",
+  "along a snowy mountain pass to a far fortress",
+  "through a cave mouth onto a red sunset",
+  "down a jungle river to a drowned ruin",
+  "across a desert to a walled city at dusk",
+  "over a galley's prow into a storm at sea",
+]
