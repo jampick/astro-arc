@@ -17,7 +17,9 @@ import qs.Commons
 // What it costs is not the shader (under 0.2 ms a frame at 4K on a desktop
 // GPU) but the compositor: every frame damages the whole screen, so Hyprland
 // recomposites it and re-blurs anything translucent on top. Hence a low frame
-// rate, and pausing whenever nobody can see it or it should not move:
+// rate (10 fps; at 8 px/s that is under a pixel a frame, and the filtered
+// sampling hides the steps), and pausing whenever nobody can see it or it
+// should not move:
 //   - motion is off in the panel, or the wallpaper has no depth map: no layer
 //   - Omarchy's no-animations mode (Style.reduceMotion): no layer
 //   - covered, per monitor: any tiled or fullscreen window on the active
@@ -31,7 +33,8 @@ import qs.Commons
 //     anything under a session lock or on a blanked output, so Qt stops
 //     drawing this layer by itself; the lock screen draws its own still.
 //     A monitor Hyprland reports as DPMS off also counts as covered.
-// Frozen keeps the current frame on screen and damages nothing.
+// Frozen keeps the current frame on screen and damages nothing. Coming back,
+// the drift eases up to speed over a second instead of starting at full pace.
 Item {
   id: root
 
@@ -48,9 +51,13 @@ Item {
   // background stays put and the middle moves at about half that.
   readonly property real parallaxPx: 22
   readonly property real parallaxPeriod: 15
-  readonly property int fps: 20
   readonly property int rampMs: 3000
+  readonly property int resumeMs: 1000
   readonly property int idleSeconds: 120
+
+  // 10 unless the settings file carries motionFps (4 to 30), which exists for
+  // measuring; the panel does not offer it.
+  property int fps: 10
 
   property bool enabled: false
   property string imagePath: ""
@@ -84,7 +91,10 @@ Item {
     onFileChanged: reload()
     onLoaded: {
       try {
-        root.enabled = JSON.parse(text() || "{}").motion === true
+        var settings = JSON.parse(text() || "{}")
+        root.enabled = settings.motion === true
+        var fps = Number(settings.motionFps)
+        root.fps = fps >= 4 && fps <= 30 ? Math.round(fps) : 10
       } catch (e) {
         root.enabled = false
       }
@@ -267,6 +277,27 @@ Item {
       // eased up to full so the zoom and the drift arrive together.
       property real strength: 0
       property real time: 0
+      // How much of a tick reaches the clock: 0 frozen, eased back to 1.
+      property real pace: 1
+
+      NumberAnimation {
+        id: resume
+        target: panel
+        property: "pace"
+        from: 0
+        to: 1
+        duration: root.resumeMs
+        easing.type: Easing.InOutSine
+      }
+
+      onFrozenChanged: {
+        if (frozen) {
+          resume.stop()
+          pace = 0
+        } else {
+          resume.restart()
+        }
+      }
 
       NumberAnimation {
         id: ramp
@@ -292,7 +323,7 @@ Item {
         interval: Math.round(1000 / root.fps)
         repeat: true
         running: panel.ready && !panel.frozen
-        onTriggered: panel.time += interval / 1000
+        onTriggered: panel.time += panel.pace * interval / 1000
       }
 
       Image {
