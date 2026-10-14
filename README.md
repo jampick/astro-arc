@@ -178,8 +178,9 @@ image on a 20-thread desktop). If either piece is missing the wallpaper stays
 still and nothing else changes. The motion only runs on a monitor where you can
 see the wallpaper: a tiled or fullscreen window, a special workspace, or
 floating windows over more than half the screen freeze it until they go. A game
-freezes it on every monitor: a fullscreen window anywhere, or any Steam game
-window (class `steam_app_*`), even windowed. It also freezes on battery, on the power-saver profile and after two minutes
+freezes it on every monitor: a fullscreen window anywhere, or any window Steam
+launched (class `steam_app_*`, or `SteamGameId` in its environment, which
+catches native Linux games too), even windowed. It also freezes on battery, on the power-saver profile and after two minutes
 without input, and Omarchy's no-animations mode turns it off. It draws 10
 frames a second, which at this speed is under a pixel a frame; `motionFps` in
 `~/.local/state/omarchy/settings/astro-arc.json` (4 to 30) overrides that, and `motionIdleSeconds` changes the idle freeze (0

@@ -32,8 +32,8 @@ import qs.Commons
 //     and under a translucent one it costs a re-blur every frame and makes the
 //     text on top harder to read.
 //   - a game running anywhere, on every monitor: a fullscreen window on any
-//     monitor's active workspace, or any Steam game window (class steam_app_*,
-//     windowed or not). The compositor draws every monitor on one GPU,
+//     monitor's active workspace, or any window Steam launched (class
+//     steam_app_*, or SteamGameId in its environment), windowed or not. The compositor draws every monitor on one GPU,
 //     usually the one the game runs on, so any monitor still moving costs
 //     the game a little.
 //   - on battery or the power-saver profile: frozen
@@ -240,7 +240,12 @@ Item {
   Process {
     id: layoutQuery
     property bool again: false
-    command: ["bash", "-c", "hyprctl -j monitors; printf '\\n\\036\\n'; hyprctl -j clients"]
+    // Third part: the pids of windows Steam launched. Native Linux games keep
+    // their own window class, so the class alone misses them, but everything
+    // Steam starts carries SteamGameId in its environment.
+    command: ["bash", "-c", "hyprctl -j monitors; printf '\\n\\036\\n'; c=$(hyprctl -j clients); printf '%s' \"$c\"; " +
+      "printf '\\n\\036\\n'; for p in $(grep -o '\"pid\": [0-9]*' <<<\"$c\" | grep -o '[0-9]*$'); do " +
+      "grep -qaz '^SteamGameId=' /proc/$p/environ 2>/dev/null && echo $p; done"]
     stdout: StdioCollector {
       onStreamFinished: {
         var parts = String(text || "").split("\n\u001e\n")
@@ -248,7 +253,7 @@ Item {
           var monitors = JSON.parse(parts[0])
           var clients = JSON.parse(parts[1])
           root.covered = root.isCovered(monitors, clients)
-          root.gameRunning = root.isGameRunning(monitors, clients)
+          root.gameRunning = root.isGameRunning(monitors, clients, String(parts[2] || "").split("\n"))
         } catch (e) {
           root.covered = false
           root.gameRunning = false
@@ -310,7 +315,7 @@ Item {
 
   // Hyprland's fullscreen field is a bit set: 1 maximized, 2 fullscreen. Only
   // real fullscreen counts here, so a maximized music player is not a game.
-  function isGameRunning(monitors, clients) {
+  function isGameRunning(monitors, clients, steamPids) {
     var shown = {}
     for (var i = 0; i < monitors.length; i++) {
       shown[monitors[i].activeWorkspace.id] = true
@@ -320,6 +325,7 @@ Item {
       var c = clients[j]
       if (c.mapped === false) continue
       if (String(c.class || "").indexOf("steam_app_") === 0) return true
+      if (steamPids.indexOf(String(c.pid)) !== -1) return true
       if ((c.fullscreen & 2) && c.workspace && shown[c.workspace.id]) return true
     }
     return false
