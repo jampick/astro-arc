@@ -20,12 +20,18 @@ import qs.Commons
 // rate, and pausing whenever nobody can see it or it should not move:
 //   - motion is off in the panel, or the wallpaper has no depth map: no layer
 //   - Omarchy's no-animations mode (Style.reduceMotion): no layer
-//   - on battery: frozen
-//   - a fullscreen window on that monitor: frozen
+//   - covered, per monitor: any tiled or fullscreen window on the active
+//     workspace, a special workspace shown over it, or floating windows over
+//     more than half the screen. Moving under an opaque window is wasted work,
+//     and under a translucent one it costs a re-blur every frame and makes the
+//     text on top harder to read.
+//   - on battery or the power-saver profile: frozen
+//   - no input for two minutes (idle inhibitors respected): frozen
 //   - locked or the screen off: Hyprland stops sending frame callbacks to
 //     anything under a session lock or on a blanked output, so Qt stops
-//     drawing this layer by itself. Only the timer still ticks.
-// Frozen keeps the last frame on screen and damages nothing.
+//     drawing this layer by itself; the lock screen draws its own still.
+//     A monitor Hyprland reports as DPMS off also counts as covered.
+// Frozen keeps the current frame on screen and damages nothing.
 Item {
   id: root
 
@@ -44,6 +50,7 @@ Item {
   readonly property real parallaxPeriod: 15
   readonly property int fps: 20
   readonly property int rampMs: 3000
+  readonly property int idleSeconds: 120
 
   property bool enabled: false
   property string imagePath: ""
@@ -55,6 +62,18 @@ Item {
 
   readonly property bool active: enabled && depthPath !== "" && !Style.reduceMotion && hostScreen !== null
   readonly property bool globallyFrozen: UPower.onBattery
+    || PowerProfiles.profile === PowerProfile.PowerSaver
+    || idle.isIdle
+
+  // Whether this monitor's wallpaper is hidden, from the last layout check.
+  property bool covered: false
+
+  IdleMonitor {
+    id: idle
+    enabled: root.active
+    timeout: root.idleSeconds
+    respectInhibitors: true
+  }
 
   // Settings live in the same file the panel edits; only an explicit true
   // turns motion on, so it is off until someone asks for it.
@@ -121,6 +140,103 @@ Item {
     }
   }
 
+  // The layout check. Hyprland announces every change that can uncover or
+  // cover the wallpaper; each one, coalesced over 150 ms, asks hyprctl for the
+  // monitors and windows once. Nothing polls. Dragging a floating window sends
+  // no event, so its new place counts from the next one.
+  readonly property var layoutEvents: ["openwindow", "closewindow", "movewindow", "movewindowv2",
+    "workspace", "workspacev2", "changefloatingmode", "fullscreen", "activespecial", "activespecialv2",
+    "moveworkspace", "moveworkspacev2", "focusedmon", "focusedmonv2", "monitoradded", "monitoraddedv2",
+    "monitorremoved", "monitorremovedv2", "pin", "minimized"]
+
+  Connections {
+    target: Hyprland
+    enabled: root.active
+    function onRawEvent(event) {
+      if (root.layoutEvents.indexOf(event.name) !== -1) layoutDebounce.restart()
+    }
+  }
+
+  onActiveChanged: if (active) layoutDebounce.restart()
+  onHostScreenChanged: layoutDebounce.restart()
+
+  Timer {
+    id: layoutDebounce
+    interval: 150
+    onTriggered: {
+      if (!root.active) return
+      if (layoutQuery.running) layoutQuery.again = true
+      else layoutQuery.running = true
+    }
+  }
+
+  Process {
+    id: layoutQuery
+    property bool again: false
+    command: ["bash", "-c", "hyprctl -j monitors; printf '\\n\\036\\n'; hyprctl -j clients"]
+    stdout: StdioCollector {
+      onStreamFinished: {
+        var parts = String(text || "").split("\n\u001e\n")
+        try {
+          root.covered = root.isCovered(JSON.parse(parts[0]), JSON.parse(parts[1]))
+        } catch (e) {
+          root.covered = false
+        }
+      }
+    }
+    onExited: {
+      if (again) {
+        again = false
+        running = true
+      }
+    }
+  }
+
+  function isCovered(monitors, clients) {
+    if (!root.hostScreen) return false
+    var m = null
+    for (var i = 0; i < monitors.length; i++) {
+      if (monitors[i].name === root.hostScreen.name) m = monitors[i]
+    }
+    if (!m) return false
+    if (m.dpmsStatus === false) return true
+    if (m.specialWorkspace && m.specialWorkspace.id !== 0) return true
+
+    var w = m.width / m.scale
+    var h = m.height / m.scale
+    if (m.transform % 2 === 1) {
+      var t = w; w = h; h = t
+    }
+
+    var floats = []
+    for (var j = 0; j < clients.length; j++) {
+      var c = clients[j]
+      if (c.mapped === false || c.hidden === true) continue
+      var here = c.workspace && c.workspace.id === m.activeWorkspace.id
+      if (!here && !(c.pinned && c.monitor === m.id)) continue
+      if (c.fullscreen > 0 || !c.floating) return true
+      floats.push(c)
+    }
+    if (floats.length === 0) return false
+
+    // Floating windows overlap, so sample a grid instead of adding areas.
+    var cols = 48, rows = 27, hidden = 0
+    for (var r = 0; r < rows; r++) {
+      for (var k = 0; k < cols; k++) {
+        var px = m.x + (k + 0.5) * w / cols
+        var py = m.y + (r + 0.5) * h / rows
+        for (var f = 0; f < floats.length; f++) {
+          var fc = floats[f]
+          if (px >= fc.at[0] && px < fc.at[0] + fc.size[0] && py >= fc.at[1] && py < fc.at[1] + fc.size[1]) {
+            hidden++
+            break
+          }
+        }
+      }
+    }
+    return hidden > cols * rows / 2
+  }
+
   LazyLoader {
     active: root.active
 
@@ -141,9 +257,7 @@ Item {
       // Clicks fall through to Omarchy's background (its double-click picker).
       mask: Region {}
 
-      readonly property var monitor: Hyprland.monitorFor(root.hostScreen)
-      readonly property bool fullscreen: monitor && monitor.activeWorkspace ? monitor.activeWorkspace.hasFullscreen === true : false
-      readonly property bool frozen: root.globallyFrozen || fullscreen
+      readonly property bool frozen: root.globallyFrozen || root.covered
       readonly property bool ready: still.status === Image.Ready && depthImage.status === Image.Ready
 
       readonly property int decodeWidth: width > 0 ? Math.ceil(width * screen.devicePixelRatio) : 0

@@ -173,10 +173,13 @@ It is the one part of Astro-Arc that needs more than Omarchy ships:
 - **A 99 MB model**, Depth Anything V2 Small, downloaded once from Hugging Face
   the first time it is needed and checked against a pinned hash.
 
-Each new wallpaper then takes about a second of CPU for its depth map. If either
-piece is missing the wallpaper stays still and nothing else changes. The motion
-pauses on battery and behind a fullscreen window, and Omarchy's no-animations
-mode turns it off. To give a wallpaper you already have a depth map, run
+Each new wallpaper then takes about a second for its depth map (1.2 s for a 4K
+image on a 20-thread desktop). If either piece is missing the wallpaper stays
+still and nothing else changes. The motion only runs on a monitor where you can
+see the wallpaper: a tiled or fullscreen window, a special workspace, or
+floating windows over more than half the screen freeze it until they go. It
+also freezes on battery, on the power-saver profile and after two minutes
+without input, and Omarchy's no-animations mode turns it off. To give a wallpaper you already have a depth map, run
 `backend/bin/astro-arc-motion backfill` while it is on screen.
 
 ## Sharing a theme
