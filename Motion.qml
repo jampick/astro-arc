@@ -21,6 +21,10 @@ import qs.Commons
 // sampling hides the steps), and pausing whenever nobody can see it or it
 // should not move:
 //   - motion is off in the panel, or the wallpaper has no depth map: no layer
+//   - a DisplayLink monitor: no layer. It has no GPU of its own; every changed
+//     frame is compressed on the CPU and sent over USB, which on a 1024x600
+//     screen measured 0.1% of a core frozen against 5 to 6% moving.
+//     motionOutputs in the settings file overrides this per monitor.
 //   - Omarchy's no-animations mode (Style.reduceMotion): no layer
 //   - covered, per monitor: any tiled or fullscreen window on the active
 //     workspace, a special workspace shown over it, or floating windows over
@@ -74,7 +78,21 @@ Item {
   // monitor its own bar is on, and three monitors get three layers, not nine.
   readonly property var hostScreen: root.QsWindow && root.QsWindow.window ? root.QsWindow.window.screen : null
 
-  readonly property bool active: enabled && depthPath !== "" && !Style.reduceMotion && hostScreen !== null
+  // motionOutputs in the settings file maps connector names to true or false,
+  // e.g. {"DVI-I-1": true}, overriding the default: on everywhere except on
+  // DisplayLink (evdi) outputs. Until the driver is known the monitor waits,
+  // so a DisplayLink screen never gets a layer for the length of the check.
+  property var outputOverrides: ({})
+  property string outputDriver: ""
+  property bool outputProbed: false
+  readonly property bool outputAllowed: {
+    if (!hostScreen || !outputProbed) return false
+    var choice = outputOverrides[hostScreen.name]
+    if (choice === true || choice === false) return choice
+    return outputDriver !== "evdi"
+  }
+
+  readonly property bool active: enabled && depthPath !== "" && !Style.reduceMotion && hostScreen !== null && outputAllowed
   readonly property bool globallyFrozen: gameRunning
     || UPower.onBattery
     || PowerProfiles.profile === PowerProfile.PowerSaver
@@ -107,6 +125,8 @@ Item {
         root.fps = fps >= 4 && fps <= 30 ? Math.round(fps) : 10
         var idleSeconds = Number(settings.motionIdleSeconds)
         root.idleSeconds = settings.motionIdleSeconds !== undefined && idleSeconds >= 0 ? Math.round(idleSeconds) : 120
+        var outputs = settings.motionOutputs
+        root.outputOverrides = outputs && typeof outputs === "object" && !Array.isArray(outputs) ? outputs : {}
       } catch (e) {
         root.enabled = false
       }
@@ -180,7 +200,32 @@ Item {
   }
 
   onActiveChanged: if (active) layoutDebounce.restart()
-  onHostScreenChanged: layoutDebounce.restart()
+  onHostScreenChanged: {
+    layoutDebounce.restart()
+    probeOutput()
+  }
+  Component.onCompleted: probeOutput()
+
+  // Which kernel driver runs this monitor's connector: the connector's sysfs
+  // node sits inside its card's, and the card links to its driver.
+  function probeOutput() {
+    if (!root.hostScreen) return
+    root.outputProbed = false
+    outputProbe.command = ["bash", "-c",
+      "for c in /sys/class/drm/card*-\"$1\"; do [[ -e $c ]] || continue; r=$(readlink -f \"$c\"); " +
+      "basename \"$(readlink -f \"${r%/*}/device/driver\")\"; break; done", "probe", root.hostScreen.name]
+    outputProbe.running = true
+  }
+
+  Process {
+    id: outputProbe
+    stdout: StdioCollector {
+      onStreamFinished: {
+        root.outputDriver = String(text || "").trim()
+        root.outputProbed = true
+      }
+    }
+  }
 
   Timer {
     id: layoutDebounce

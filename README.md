@@ -183,7 +183,10 @@ window (class `steam_app_*`), even windowed. It also freezes on battery, on the 
 without input, and Omarchy's no-animations mode turns it off. It draws 10
 frames a second, which at this speed is under a pixel a frame; `motionFps` in
 `~/.local/state/omarchy/settings/astro-arc.json` (4 to 30) overrides that, and `motionIdleSeconds` changes the idle freeze (0
-turns it off). To give a wallpaper you already have a depth map, run
+turns it off). It stays off on DisplayLink monitors, where every moving frame
+is compressed on the CPU (on a 1024x600 screen that was 5 to 6% of a core,
+against 0.1% standing still); `motionOutputs` takes connector names to switch a
+monitor on or off by hand, e.g. `"motionOutputs": {"DVI-I-1": true}`. To give a wallpaper you already have a depth map, run
 `backend/bin/astro-arc-motion backfill` while it is on screen.
 
 ## Sharing a theme
