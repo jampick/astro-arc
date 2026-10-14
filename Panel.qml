@@ -931,6 +931,33 @@ Panel {
     onExited: function(exitCode) { if (exitCode === 0) root.configFile.reload() }
   }
 
+  // ---- Moving background (default off): depth parallax over the wallpaper,
+  // drawn by Motion.qml. Turning it on also makes the depth map for the
+  // wallpaper already on screen, so it starts moving without waiting for the
+  // next generation; that fetches the 99 MB model the first time. -----------
+  readonly property string motionBin: binDir + "/astro-arc-motion"
+
+  function commitMotion(value) {
+    motionWriteProc.turningOn = value
+    motionWriteProc.command = [root.configBin, "--set-motion", value ? "true" : "false"]
+    motionWriteProc.running = true
+  }
+
+  Process {
+    id: motionWriteProc
+    property bool turningOn: false
+    onExited: function(exitCode) {
+      if (exitCode !== 0) return
+      root.configFile.reload()
+      if (turningOn && !motionBackfillProc.running) motionBackfillProc.running = true
+    }
+  }
+
+  Process {
+    id: motionBackfillProc
+    command: [root.motionBin, "backfill"]
+  }
+
   // ---- History retention: how many days of "Themes Generated" entries
   // astro-arc-generate keeps before astro-arc-prune-history deletes them,
   // every run. Never affects a theme already exported via Save Selected
@@ -1509,6 +1536,18 @@ Panel {
               foreground: root.bar.foreground
               fontFamily: root.bar.fontFamily
               onClicked: root.commitBackgroundOnly(!root.configState.backgroundOnly)
+            }
+
+            Toggle {
+              width: parent.width
+              label: root.configState.motion ? "Moving background (on)" : "Moving background (off)"
+              description: root.configState.motion
+                ? "Near things drift against far ones; pauses on battery and under fullscreen"
+                : "Keep the wallpaper still"
+              checked: root.configState.motion
+              foreground: root.bar.foreground
+              fontFamily: root.bar.fontFamily
+              onClicked: root.commitMotion(!root.configState.motion)
             }
 
             // ---- Provider: the global setting everything else is scoped

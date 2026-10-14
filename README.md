@@ -157,6 +157,28 @@ will charge, and whether that figure is measured or projected.
 You can set a hard ceiling per image, and every model your key can reach is
 selectable in the Advanced popout if you want to tune it yourself.
 
+## Moving background
+
+Turn on **Moving background** in the panel's settings and the wallpaper starts
+to drift: a depth model works out what is near and what is far, and a shader
+slides the near things against a background that stays put, about 8 px a second
+at the fastest on a 1080p screen. It is off by default.
+
+It is the one part of Astro-Arc that needs more than Omarchy ships:
+
+- **onnxruntime with numpy and pillow.** On Arch that is
+  `omarchy-pkg-add python-onnxruntime-cpu`. Without root,
+  `backend/bin/astro-arc-motion setup --venv` puts onnxruntime in a private
+  venv under `~/.local/state/omarchy/astro-arc/motion` instead.
+- **A 99 MB model**, Depth Anything V2 Small, downloaded once from Hugging Face
+  the first time it is needed and checked against a pinned hash.
+
+Each new wallpaper then takes about a second of CPU for its depth map. If either
+piece is missing the wallpaper stays still and nothing else changes. The motion
+pauses on battery and behind a fullscreen window, and Omarchy's no-animations
+mode turns it off. To give a wallpaper you already have a depth map, run
+`backend/bin/astro-arc-motion backfill` while it is on screen.
+
 ## Sharing a theme
 
 Any generation can be exported as a standalone Omarchy theme repository —
