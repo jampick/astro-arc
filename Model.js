@@ -94,7 +94,8 @@ var ART_STYLE_CHOICES = [
   { key: "ghibli", label: "Studio Ghibli" },
   { key: "cyberpunk", label: "Cyberpunk" },
   { key: "ukiyoe", label: "Ukiyo-e" },
-  { key: "illuminated", label: "Illuminated Manuscript" }
+  { key: "illuminated", label: "Illuminated Manuscript" },
+  { key: "bosch", label: "Hieronymus Bosch" }
 ]
 
 // ---- Model catalog labels -------------------------------------------------

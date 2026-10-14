@@ -1051,3 +1051,84 @@ space = [
   "a forest hunt running from the near margin into the trees",
   "from a tower over a calendar of fields",
 ]
+
+
+# CHARTER, 2026-10-12 (new style, written to docs/charter-schema.md): Bosch's
+# Brabant around 1500: a crowded, high-viewed world of pleasure and penance
+# where sins are built as contraptions, fruit and hybrids. The tree-man and the
+# lone tormented sinner in close-up are demoted as the painter's most worn images.
+[bosch.world]
+era = "Brabant around 1500 as Hieronymus Bosch painted it: a flat, watery Low Countries plain of walled towns, inns, mills and monasteries, seen from high above, in an age that expects the Last Judgment soon. Technology is the hand tool and the household vessel, and any of them may be turned into a body or a house."
+materials = "Pink and blue stone grown in bulbous shapes, wicker, earthenware, glassy fruit skin, eggshell, and rough brown homespun. Every surface is crisp-edged and finely painted, nothing is blurred."
+physics = "Scale follows meaning, not nature: a person may be smaller than a berry and a musical instrument larger than a barn. Hybrids join at clean seams, a head walking on legs, a body grown from a pitcher. Daylight is high, even and cool; at night only fire gives light, and nothing else glows of its own accord."
+society = "Peasants, pilgrims, friars, nuns, quacks, conjurers, merchants and lovers in a crowded world of pleasure and penance. Days here are feasts, bathing parties, card games, courtship, carnival and processions as often as labour."
+weather = "The whole range: the pale green-blue distance of a clear spring morning, a still noon over the marsh, storm cloud over the plain, a night sky smoked red by a burning town. Pick what the day calls for."
+inhabitants = "Crowds of small people in shifts and homespun, friars and peasants, hybrid demons assembled from animals and utensils, owls, birds and fish larger than the people round them, and the occasional hermit saint. They are as often at play or at rest as at work or punishment."
+strangeness = "The monstrous is everyday and busy: demons go about their tasks like tradespeople, and the people beside them are absorbed in their own pleasures or chores. Nobody looks up and nobody is surprised."
+numinous = "The sacred is small and exact and has a body: an angel with peacock-coloured wings leading one soul by the wrist, a hermit at prayer while hybrids crowd round him. It is painted with the same care as everything else, never as an aura, a beam or a blur."
+dread = "This world at its darkest is the Judgment come true: towns burning on the horizon at night, people punished by the very instruments of their pleasures, a crowd led in procession into a giant mouth. Painted with the same cool precision as a garden, a clean wound at most, and the frame does not take sides."
+favoured_actors = "Crowds and swarms of small figures each doing something different, hybrids at work, pairs and small groups, birds and fish. The tree-man and a single tormented sinner in close-up are this painter's most worn images and should not be the default."
+myth = "Late-medieval Christian moral allegory: the seven deadly sins, the Garden of Eden and the Last Judgment; the lives and temptations of the desert hermit saints; Netherlandish proverbs, carnival and the Ship of Fools; and the vessels and marriages of alchemy."
+highlight = "The thing the eye finds first: a sin or a temptation built as a contraption, a hybrid creature or an outsize everyday thing, with small people busy round it, riding it or carrying it off. Today's kind of wrongness is given with this definition. Painted as crisply as everything else."
+highlight_modes = [
+  "a hybrid of a creature and a household tool",
+  "a musical instrument at the scale of a building",
+  "an instrument of pleasure turned into a punishment",
+  "a bird or fish that dwarfs the people round it",
+  "a cart or boat crowded with fools parading a sin",
+]
+
+[bosch.brief]
+signature = "SIGNATURE — at least one hybrid demon or impossible contraption, assembled from parts of animals, tools or fruit, is named explicitly and doing something. It may be the highlight. A scene that could be any Flemish landscape or peasant painting is a failed response."
+temper = "TEMPER — the highlight, and anything numinous in the frame, is in this temper: {wonderTone}"
+
+[bosch.verbs]
+process_hard = ["catching fire", "splitting open", "bursting its skin", "swarming over", "keeling into the mire", "impaling", "sinking into the mire", "smoking", "spilling out", "shattering like an egg", "tilting", "blistering", "seething", "slumping into the water", "gnawing", "festering", "skewering", "listing", "being swallowed", "burning down to the frame", "ripping at the seams", "going under"]
+process_soft = ["blushing ripe", "flowering open", "bobbing among bathers", "hatching", "sprouting", "glistening", "spilling seeds", "wafting", "swelling with seed", "nodding", "doubling in the water", "brimming", "rising like bubbles", "nesting", "trailing", "lolling", "wheeling slowly", "spouting", "pooling", "setting fruit"]
+actor_hard.work = ["stoking a furnace under", "dragging off by the heel", "pounding", "sawing through", "prodding with a spear", "rowing a crowded boat toward", "hauling on a rope at"]
+actor_hard.rest = ["cowering behind", "hiding under", "slumped asleep against"]
+actor_hard.play = ["gambling at", "playing a bagpipe over", "dancing round"]
+actor_hard.ritual = ["confessing to", "doing penance at", "cutting the stone of folly from"]
+actor_hard.travel = ["riding a giant fish across", "fleeing across", "crowding aboard", "wading through", "being carried off over"]
+actor_soft.work = ["picking giant berries from", "fishing from", "carrying fruit to", "tending", "gathering eggs from", "building a nest in"]
+actor_soft.rest = ["bathing in", "lying in pairs beside", "feasting under", "dozing on"]
+actor_soft.play = ["riding round", "swimming with", "balancing on", "courting in", "playing music to"]
+actor_soft.ritual = ["praying at", "singing hymns at", "laying hands on"]
+actor_soft.travel = ["drifting on a raft across", "processing toward", "flying on the back of", "rowing to", "walking in pairs toward"]
+
+[bosch.registers]
+"botanical" = "Plants as temptation and feast: a strawberry carried off on a pole by four people, a thistle grown into a gateway. Fruit is always ripe and always too large, and it is picked, carried, ridden or fought over, not lived in."
+"bodily and anatomical" = "The body as a building and a vessel: a giant ear that is also a cart, a torso hollowed into a room. Seams are clean and the mood is calm, never gore."
+"fungal and decaying" = "Rot as the sin made visible: a feast spoiling on the table, a tavern sign gone soft and black. Decay is quiet and exact."
+"animal and creaturely" = "Animals as companions, mounts and messengers: an owl watching from a hollow, a fish ridden like a horse. Some are half something else."
+"geological" = "Rock as dreamed landscape: pink stone grown into towers with pods and spikes, blue crags fading into the distance."
+"metallic and ore" = "Metal as the instrument of punishment and trade: a knife between two ears, a cauldron, a coin purse that eats its owner."
+"glass and ceramic" = "Glass as a lovers' house and a trap: a glass globe with a couple inside, a pitcher with legs. Fragile things hold people."
+"architectural" = "Towns, inns, mills and ruined chapels seen from above, some of them alive: a tower with a face in its wall, an inn with a swan on its sign."
+"domestic interior" = "The inn, the kitchen and the bedchamber, opened up to the landscape: a table spread for a feast under the open sky, a bed tipped toward a window."
+"mechanical" = "The contraptions of a world before machines: a mill that grinds people, a wheel of knives turned by a demon, a cart with legs."
+"industrial and infrastructural" = "The works of the Low Countries, crowded and strange: a dyke with a crowd on top, a lock gate with a mouth, a mill race through a town."
+"agricultural and cultivated" = "The field and the garden of delights: haymaking under a giant haywain, an orchard where the fruit is larger than the pickers."
+"aquatic" = "Water as pleasure and as trap: a lake crowded with bathers, a boat of fools, a moat round a pink fountain."
+"atmospheric" = "Air full of things: flying fish and riders on birds in a pale sky, smoke drifting from a burning town."
+"glacial and frozen" = "Ice as the cold hell and the winter fair: skaters on a frozen lake, a sinner frozen into a pond while others skate past."
+"fire and ember" = "Fire as the Judgment's light: a town burning at night on the horizon, a furnace under a cauldron, sparks against black water."
+"textile and fiber" = "Cloth and wicker as shelter and disguise: a friar's habit worn by a pig, a wicker cage carried by a hybrid, a tent made of a giant leaf."
+"ritual object" = "The apparatus of the late-medieval church and its parodies: a reliquary carried in procession, an altar set in a hollow tree, a funnel worn as a hat."
+"paper and inscription" = "Books, letters and indulgences that are alive or misused: a book sung from by a pig, a letter sealed with a thumb. Writing appears as marks, never a readable sentence."
+"instrument and measure" = "Musical instruments at the scale of buildings, and the tools of the quack: a harp a person is strung on, a lute ridden like a mount, a hurdy-gurdy turned by a hybrid."
+
+[bosch]
+label = "Hieronymus Bosch"
+suffix_base = "An oil painting on oak panel in the manner of Hieronymus Bosch around 1500. A high viewpoint over a deep landscape that fades through bands of brown, green and pale blue to a low, misty horizon. Thin glassy glazes over a pale ground, crisp contours, small precise forms with fine dot highlights and little cast shadow. Pale pinks and flesh tones, pond-water greens and cool blues against warm browns; any fire is hot orange against black. A smooth panel surface with fine craquelure, not digital or photographic. No text or lettering."
+suffix_figures = " Only if a person is explicitly part of the scene described above: people are small and slender, with pale skin, simple oval faces and calm, absorbed expressions, painted with the same crisp outline and thin glaze as everything else."
+space = [
+  "a high bird's-eye view over a garden of pools and fountains to blue hills",
+  "across a marsh crowded with small figures to a town burning at night",
+  "along a river road past an inn and a mill to a far walled town",
+  "from a hermit's ruined chapel across a plain to a pale horizon",
+  "down a lake crowded with bathers to the fountain in its middle",
+  "past a haywain and the crowd round it toward a far town",
+  "across a frozen lake of skaters to a dark city",
+  "over a sea of small boats to an island town",
+]
