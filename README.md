@@ -181,7 +181,8 @@ floating windows over more than half the screen freeze it until they go. It
 also freezes on battery, on the power-saver profile and after two minutes
 without input, and Omarchy's no-animations mode turns it off. It draws 10
 frames a second, which at this speed is under a pixel a frame; `motionFps` in
-`~/.local/state/omarchy/settings/astro-arc.json` (4 to 30) overrides that. To give a wallpaper you already have a depth map, run
+`~/.local/state/omarchy/settings/astro-arc.json` (4 to 30) overrides that, and `motionIdleSeconds` changes the idle freeze (0
+turns it off). To give a wallpaper you already have a depth map, run
 `backend/bin/astro-arc-motion backfill` while it is on screen.
 
 ## Sharing a theme

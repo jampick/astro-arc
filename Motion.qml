@@ -53,7 +53,9 @@ Item {
   readonly property real parallaxPeriod: 15
   readonly property int rampMs: 3000
   readonly property int resumeMs: 1000
-  readonly property int idleSeconds: 120
+  // motionIdleSeconds in the settings file changes it; 0 turns the idle
+  // freeze off.
+  property int idleSeconds: 120
 
   // 10 unless the settings file carries motionFps (4 to 30), which exists for
   // measuring; the panel does not offer it.
@@ -77,8 +79,8 @@ Item {
 
   IdleMonitor {
     id: idle
-    enabled: root.active
-    timeout: root.idleSeconds
+    enabled: root.active && root.idleSeconds > 0
+    timeout: Math.max(1, root.idleSeconds)
     respectInhibitors: true
   }
 
@@ -95,6 +97,8 @@ Item {
         root.enabled = settings.motion === true
         var fps = Number(settings.motionFps)
         root.fps = fps >= 4 && fps <= 30 ? Math.round(fps) : 10
+        var idleSeconds = Number(settings.motionIdleSeconds)
+        root.idleSeconds = settings.motionIdleSeconds !== undefined && idleSeconds >= 0 ? Math.round(idleSeconds) : 120
       } catch (e) {
         root.enabled = false
       }
