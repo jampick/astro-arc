@@ -27,6 +27,11 @@ import qs.Commons
 //     more than half the screen. Moving under an opaque window is wasted work,
 //     and under a translucent one it costs a re-blur every frame and makes the
 //     text on top harder to read.
+//   - a game running anywhere, on every monitor: a fullscreen window on any
+//     monitor's active workspace, or any Steam game window (class steam_app_*,
+//     windowed or not). The compositor draws every monitor on one GPU,
+//     usually the one the game runs on, so any monitor still moving costs
+//     the game a little.
 //   - on battery or the power-saver profile: frozen
 //   - no input for two minutes (idle inhibitors respected): frozen
 //   - locked or the screen off: Hyprland stops sending frame callbacks to
@@ -70,12 +75,15 @@ Item {
   readonly property var hostScreen: root.QsWindow && root.QsWindow.window ? root.QsWindow.window.screen : null
 
   readonly property bool active: enabled && depthPath !== "" && !Style.reduceMotion && hostScreen !== null
-  readonly property bool globallyFrozen: UPower.onBattery
+  readonly property bool globallyFrozen: gameRunning
+    || UPower.onBattery
     || PowerProfiles.profile === PowerProfile.PowerSaver
     || idle.isIdle
 
-  // Whether this monitor's wallpaper is hidden, from the last layout check.
+  // Whether this monitor's wallpaper is hidden, and whether a game is running
+  // anywhere, from the last layout check.
   property bool covered: false
+  property bool gameRunning: false
 
   IdleMonitor {
     id: idle
@@ -192,9 +200,13 @@ Item {
       onStreamFinished: {
         var parts = String(text || "").split("\n\u001e\n")
         try {
-          root.covered = root.isCovered(JSON.parse(parts[0]), JSON.parse(parts[1]))
+          var monitors = JSON.parse(parts[0])
+          var clients = JSON.parse(parts[1])
+          root.covered = root.isCovered(monitors, clients)
+          root.gameRunning = root.isGameRunning(monitors, clients)
         } catch (e) {
           root.covered = false
+          root.gameRunning = false
         }
       }
     }
@@ -249,6 +261,23 @@ Item {
       }
     }
     return hidden > cols * rows / 2
+  }
+
+  // Hyprland's fullscreen field is a bit set: 1 maximized, 2 fullscreen. Only
+  // real fullscreen counts here, so a maximized music player is not a game.
+  function isGameRunning(monitors, clients) {
+    var shown = {}
+    for (var i = 0; i < monitors.length; i++) {
+      shown[monitors[i].activeWorkspace.id] = true
+      if (monitors[i].specialWorkspace && monitors[i].specialWorkspace.id !== 0) shown[monitors[i].specialWorkspace.id] = true
+    }
+    for (var j = 0; j < clients.length; j++) {
+      var c = clients[j]
+      if (c.mapped === false) continue
+      if (String(c.class || "").indexOf("steam_app_") === 0) return true
+      if ((c.fullscreen & 2) && c.workspace && shown[c.workspace.id]) return true
+    }
+    return false
   }
 
   LazyLoader {
