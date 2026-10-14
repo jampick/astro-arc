@@ -342,10 +342,16 @@ Item {
         smooth: true
       }
 
+      // Half the screen's size each way, a quarter of its pixels: the map is
+      // blurred to begin with, so the shader cannot tell, and the texture it
+      // reads every frame shrinks. Never above the 1280 px the maps are made
+      // at (depth_map.py MAX_WIDTH), so a 4K screen keeps the map as it is.
       Image {
         id: depthImage
         visible: false
         source: root.depthPath ? "file://" + root.depthPath : ""
+        sourceSize.width: Math.min(1280, Math.ceil(panel.decodeWidth / 2))
+        sourceSize.height: Math.min(720, Math.ceil(panel.decodeHeight / 2))
         asynchronous: true
         cache: false
         smooth: true
