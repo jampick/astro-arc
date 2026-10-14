@@ -145,6 +145,20 @@ if [[ $image_backend != openai ]]; then
   exit 1
 fi
 
+# Style rotation moves on only for a scheduled run. A Regenerate click renders
+# the style the dropdown shows, which after a scheduled run is the one that run
+# picked. The pick is written to the config before Stage 1 so llm_pipeline.py
+# and the panel both see it; it leaves the shuffle bag only after the render
+# succeeds (see style_rotation.py).
+rotated_style=""
+if [[ $if_due == 1 && $(cfg 'if .rotateStyles == true then "true" else "false" end') == true ]]; then
+  rotated_style=$("$PY" "$BIN_DIR/style_rotation.py" next <<<"$config_json" 2>/dev/null || true)
+  if [[ -n $rotated_style && $rotated_style != "$(cfg '.artStyle // ""')" ]]; then
+    "$BIN_DIR/astro-arc-config" --set-art-style "$rotated_style" \
+      || echo "Astro-Arc: warning — could not switch to the next style ($rotated_style)" >&2
+  fi
+fi
+
 # Checked here rather than earlier so the --if-due no-ops above (nothing due,
 # or auto-generation off) stay quiet. All are in Omarchy's base install; this
 # only fires on a system that removed one.
@@ -261,6 +275,10 @@ prompt=$("$PY" "$BIN_DIR/llm_pipeline.py" "$reading_file" "$pipeline_meta_file")
 # build() used to save it before the render, so a refused image still moved
 # the register rotation and the avoided-concepts window on (2026-10-08).
 "$PY" "$BIN_DIR/llm_pipeline.py" --commit-history "$pipeline_meta_file"
+if [[ -n $rotated_style ]]; then
+  "$PY" "$BIN_DIR/style_rotation.py" done "$rotated_style" \
+    || echo "Astro-Arc: warning — could not update the style rotation" >&2
+fi
 
 # Clean slate every run, not just an overwrite: whichever theme generator
 # ran last time (built-in or aether) may have left files the other one
