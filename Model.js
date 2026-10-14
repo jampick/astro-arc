@@ -33,6 +33,9 @@ var DEFAULT_CONFIG = {
   // Most people already run a theme they chose, often several theme plugins;
   // repainting all of it every day is the opt-in, not the default.
   backgroundOnly: true,
+  // Off until asked for: a moving desktop needs a 99 MB depth model and
+  // onnxruntime, and not everyone wants their wallpaper to move.
+  motion: false,
   historyRetentionDays: 30,
   maxCostPerImage: 0,
   provider: "openai"
@@ -273,6 +276,7 @@ function parseConfig(raw) {
       themeGenerator: data.themeGenerator === "aether" ? "aether" : "built-in",
       // Only an explicit false turns it off, matching astro-arc-generate.
       backgroundOnly: data.backgroundOnly !== false,
+      motion: data.motion === true,
       historyRetentionDays: Number.isInteger(data.historyRetentionDays) && data.historyRetentionDays >= 1 && data.historyRetentionDays <= 3650
         ? data.historyRetentionDays : 30,
       // 0 (or anything unparseable) means no ceiling.

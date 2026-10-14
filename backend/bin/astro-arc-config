@@ -72,6 +72,11 @@
 #                                          derived palette as the astro-arc
 #                                          theme. Default true — most people
 #                                          already have a theme they chose.
+#   --set-motion <true|false>             true: the wallpaper moves (depth
+#                                          parallax, see astro-arc-motion).
+#                                          Default false: it needs a 99 MB model
+#                                          and onnxruntime, and a moving desktop
+#                                          should be asked for.
 #   --set-theme-generator <built-in|aether>
 #                                          how colors.toml/icons.theme get
 #                                          derived from the rendered image:
@@ -109,7 +114,7 @@ CONFIG_FILE="$HOME/.local/state/omarchy/settings/astro-arc.json"
 # that costs nothing is the only one safe to choose on a new user's behalf.
 # A frequency already written to CONFIG_FILE still wins — these are only the
 # values a missing key falls back to (see the jq merge in read_config).
-DEFAULTS='{"birthDate":"","birthTime":"","birthTimeUnknown":false,"locationName":"","latitude":null,"longitude":null,"timezone":"","frequency":"manual","imageBackend":"openai","openaiModel":"","openaiQuality":"","stage1Model":"gpt-4o-mini","stage2Model":"gpt-4o-mini","backgroundSize":"auto","artStyle":"symbolist","themeGenerator":"built-in","backgroundOnly":true,"historyRetentionDays":30,"maxCostPerImage":0,"provider":"openai"}'
+DEFAULTS='{"birthDate":"","birthTime":"","birthTimeUnknown":false,"locationName":"","latitude":null,"longitude":null,"timezone":"","frequency":"manual","imageBackend":"openai","openaiModel":"","openaiQuality":"","stage1Model":"gpt-4o-mini","stage2Model":"gpt-4o-mini","backgroundSize":"auto","artStyle":"symbolist","themeGenerator":"built-in","backgroundOnly":true,"motion":false,"historyRetentionDays":30,"maxCostPerImage":0,"provider":"openai"}'
 COORDS_PATTERN='^-?[0-9]+(\.[0-9]+)?,-?[0-9]+(\.[0-9]+)?$'
 # IANA zone names: Area/Location[/Sub], plus the bare ones like UTC. Letters,
 # digits, _ + - only, so nothing a shell or jq could read as syntax.
@@ -246,6 +251,12 @@ case "${1:-}" in
   updated=$(jq --argjson b "$2" '.backgroundOnly=$b' <<<"$current")
   write_config "$updated"
   ;;
+--set-motion)
+  [[ ${2:-} =~ ^(true|false)$ ]] || { echo "Usage: astro-arc-config --set-motion <true|false>" >&2; exit 1; }
+  current=$(read_config)
+  updated=$(jq --argjson b "$2" '.motion=$b' <<<"$current")
+  write_config "$updated"
+  ;;
 --set-history-retention-days)
   [[ ${2:-} =~ ^[0-9]+$ && ${2:-0} -ge 1 && ${2:-0} -le 3650 ]] || { echo "Usage: astro-arc-config --set-history-retention-days <N> (1-3650)" >&2; exit 1; }
   current=$(read_config)
@@ -253,7 +264,7 @@ case "${1:-}" in
   write_config "$updated"
   ;;
 *)
-  echo "Usage: astro-arc-config [--set-birth <date> <time|unknown>|--set-location <name> [lat,lon] [timezone]|--set-timezone <tz>|--clear-location|--set-frequency <hourly|daily|weekly|monthly|manual>|--set-image-backend <local|openai>|--set-openai-model <model> [quality]|--set-stage1-model <model>|--set-stage2-model <model>|--set-background-size <auto|WxH>|--set-art-style <key>|--set-theme-generator <built-in|aether>|--set-background-only <true|false>|--set-history-retention-days <N>]" >&2
+  echo "Usage: astro-arc-config [--set-birth <date> <time|unknown>|--set-location <name> [lat,lon] [timezone]|--set-timezone <tz>|--clear-location|--set-frequency <hourly|daily|weekly|monthly|manual>|--set-image-backend <local|openai>|--set-openai-model <model> [quality]|--set-stage1-model <model>|--set-stage2-model <model>|--set-background-size <auto|WxH>|--set-art-style <key>|--set-theme-generator <built-in|aether>|--set-background-only <true|false>|--set-motion <true|false>|--set-history-retention-days <N>]" >&2
   exit 1
   ;;
 esac
