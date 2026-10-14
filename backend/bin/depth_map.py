@@ -46,8 +46,13 @@ def main():
     ow = min(W, MAX_WIDTH)
     oh = max(1, round(H * ow / W))
     dimg = Image.fromarray((d * 255).astype(np.uint8)).resize((ow, oh), Image.BICUBIC)
-    # A soft depth hides tearing at object edges.
-    dimg = dimg.filter(ImageFilter.GaussianBlur(radius=max(ow, oh) / 640))
+    # Grow the near side of every edge, then blur. Without the grow, the blur
+    # straddles the silhouette and the shift smears the rim of a figure into
+    # streaks; with it the figure moves whole and the stretch lands on the
+    # background just outside it, spread over a wider blur where it reads as
+    # soft rather than torn. Both scale with the map: 11 px and 5 px at 1280.
+    r = max(1, round(ow / 256))
+    dimg = dimg.filter(ImageFilter.MaxFilter(2 * r + 1)).filter(ImageFilter.GaussianBlur(radius=r))
     # Saved as RGB because the shader reads the red channel, and RGB is what
     # the motion prototype's textures were checked with.
     tmp = out + ".tmp"
