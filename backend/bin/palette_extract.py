@@ -119,6 +119,16 @@ BASE_COLORS = {
 # making them as prominent as primary text, which 4.5:1 would.
 DIM_CONTRAST_RATIO = 3.0
 TEXT_CONTRAST_RATIO = 4.5
+# Primary terminal/editor text gets the stricter WCAG AAA ratio: it's what
+# you read and type all day, so 4.5:1 on a warm mid-tone background felt
+# washed out in practice (#c9a68c on #484038 from a sepia render).
+FOREGROUND_CONTRAST_RATIO = 7.0
+# The darkest dominant color of a bright painting can still be a mid-tone
+# (#484038 came out of one), which made a "dark" theme's terminal glare.
+# A dark theme's background is shaded down, hue kept, until its WCAG
+# luminance is at most this; 0.02 sits around #2a2622 for warm browns,
+# close to where Omarchy's stock dark themes live.
+DARK_BACKGROUND_MAX_LUMINANCE = 0.02
 
 
 def _hex(rgb):
@@ -181,6 +191,22 @@ def _ensure_contrast(rgb, reference_rgb, min_ratio):
     return best
 
 
+def _cap_luminance(rgb, max_luminance):
+    """Scale `rgb` toward black (keeping its hue) until its relative
+    luminance is at most max_luminance. Returns `rgb` unchanged if it
+    already is."""
+    if _relative_luminance(rgb) <= max_luminance:
+        return rgb
+    lo, hi = 0.0, 1.0
+    for _ in range(20):
+        mid = (lo + hi) / 2
+        if _relative_luminance(_scale(rgb, mid)) <= max_luminance:
+            lo = mid
+        else:
+            hi = mid
+    return _scale(rgb, lo)
+
+
 def dominant_colors(image_path, count=5):
     """The image's `count` dominant colors, most common first, as (r, g, b).
 
@@ -224,7 +250,7 @@ def build_colors_toml(image_path):
 
     dark_theme = _lightness(darkest) < 128
     mode = "dark" if dark_theme else "light"
-    background = darkest if dark_theme else lightest
+    background = _cap_luminance(darkest, DARK_BACKGROUND_MAX_LUMINANCE) if dark_theme else lightest
     foreground_raw = lightest if dark_theme else darkest
 
     # accent/foreground come from the image itself, so only their contrast
@@ -234,7 +260,7 @@ def build_colors_toml(image_path):
     # way — see _ensure_contrast's docstring for why a straight tint/shade
     # is enough to keep each one recognizably its own color.
     accent_fixed = _ensure_contrast(accent, background, TEXT_CONTRAST_RATIO)
-    foreground = _ensure_contrast(foreground_raw, background, TEXT_CONTRAST_RATIO)
+    foreground = _ensure_contrast(foreground_raw, background, FOREGROUND_CONTRAST_RATIO)
     ansi = {
         name: _ensure_contrast(rgb, background, TEXT_CONTRAST_RATIO)
         for name, rgb in BASE_COLORS.items()
