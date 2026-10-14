@@ -123,7 +123,30 @@ var ART_STYLE_CHOICES = [
   { key: "cyberpunk", label: "Cyberpunk" },
   { key: "ukiyoe", label: "Ukiyo-e" },
   { key: "illuminated", label: "Illuminated Manuscript" },
-  { key: "bosch", label: "Hieronymus Bosch" }
+  { key: "bosch", label: "Hieronymus Bosch" },
+  { key: "atomic", label: "Atomic Retro-Future" },
+  { key: "frazetta", label: "Barbarian Pulp" },
+  { key: "funk", label: "Grindhouse Funk" },
+  { key: "velvet", label: "Black Velvet" },
+  { key: "floating", label: "Crimson Edo" },
+  { key: "smokeshow", label: "Backroad Smoke Show" },
+  { key: "paperback", label: "Paperback Noir" },
+  { key: "giallo", label: "Giallo" },
+  { key: "kowloon", label: "Kowloon Billboard" },
+  { key: "masala", label: "Bombay Silk" },
+  { key: "calendario", label: "Calendario" },
+  { key: "lowrider", label: "Lowrider" },
+  { key: "shinjuku", label: "Shinjuku 1972" },
+  { key: "havana", label: "Havana Label" },
+  { key: "cabaret", label: "Berlin Cabaret" },
+  { key: "backglass", label: "Backglass" },
+  { key: "muertos", label: "Muertos Noir" },
+  { key: "hammer", label: "Gothic One-Sheet" },
+  { key: "eurospy", label: "Eurospy" },
+  { key: "planetpulp", label: "Planet Pulp" },
+  { key: "almeria", label: "Almería Western" },
+  { key: "jungle", label: "Jungle Adventure" },
+  { key: "malibu", label: "Malibu 1963" }
 ]
 
 // ---- Model catalog labels -------------------------------------------------
