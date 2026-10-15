@@ -690,6 +690,52 @@ function runCoversPeriod(lastRun, frequency, now, hours) {
   return lastRun.periodKey === currentKey
 }
 
+// The shortest gap allowed between the last run and an automatic one. Coming
+// back to the desk at 11:50 renders the hour that was skipped while away, and
+// without this the 12:00 tick would render again ten minutes later. Half the
+// interval on hourly, so the next picture waits rather than being skipped:
+// the tick that clears the gap still renders it. Other cadences only get the
+// same 30 minutes, which keeps a manual Regenerate at 23:50 from being
+// followed by Daily at midnight but never moves a day's run by more.
+function minGapMinutes(frequency, hours) {
+  if (frequency === "hourly") return Math.max(30, intervalHours(hours) * 30)
+  return 30
+}
+
+function tooSoonAfterLastRun(lastRun, frequency, now, hours) {
+  if (!lastRun || !lastRun.generatedAt) return false
+  var generated = new Date(lastRun.generatedAt)
+  if (isNaN(generated.getTime())) return false
+  var current = now || new Date()
+  return current.getTime() - generated.getTime() < minGapMinutes(frequency, hours) * 60 * 1000
+}
+
+// "2h 14m", "47m", "1d 3h" for the welcome-back toast. Minutes are floored:
+// rounding up would claim time away that was not.
+function formatAwayDuration(ms) {
+  var minutes = Math.max(0, Math.floor((ms || 0) / 60000))
+  var days = Math.floor(minutes / 1440)
+  var hrs = Math.floor((minutes % 1440) / 60)
+  var mins = minutes % 60
+  if (days > 0) return days + "d " + hrs + "h"
+  if (hrs > 0) return hrs + "h " + mins + "m"
+  return mins + "m"
+}
+
+// The toast shown when a render starts because you came back. `skipped` is how
+// many periods went by unrendered while you were away; `perRun` is the
+// catalog's estimate for one of them, or null when there is none to quote.
+function welcomeBackBody(awayMs, skipped, perRun) {
+  var body = "Away " + formatAwayDuration(awayMs) + "."
+  if (skipped > 0) {
+    body += " Skipped " + skipped + (skipped === 1 ? " render" : " renders")
+    if (typeof perRun === "number" && perRun > 0)
+      body += " (about $" + (skipped * perRun).toFixed(2) + " saved)"
+    body += "."
+  }
+  return body + " Painting a fresh one now."
+}
+
 // Formats a generatedAt timestamp for display. Callers own the surrounding
 // wording (e.g. "Daily · " + this) so this only ever returns the date/time
 // part; `formatter` lets a caller pick a compact pattern instead of the
@@ -741,6 +787,10 @@ if (typeof module !== "undefined") {
     isValidCoordinate: isValidCoordinate,
     currentPeriodKey: currentPeriodKey,
     runCoversPeriod: runCoversPeriod,
+    minGapMinutes: minGapMinutes,
+    tooSoonAfterLastRun: tooSoonAfterLastRun,
+    formatAwayDuration: formatAwayDuration,
+    welcomeBackBody: welcomeBackBody,
     formatGeneratedAt: formatGeneratedAt,
     sumCosts: sumCosts,
     formatBytes: formatBytes,

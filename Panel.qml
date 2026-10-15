@@ -346,32 +346,105 @@ Panel {
   property string autoAttemptedPeriodKey: ""
   readonly property int autoGenerateCheckInterval: 5 * 60 * 1000
 
+  // Returns true when it started a render, so the welcome-back path knows
+  // whether there is anything to announce.
   function checkAutoGenerate() {
-    if (!root.lastRunLoaded || root.generating) return
+    if (!root.lastRunLoaded || root.generating) return false
     // Nothing to generate from yet (fresh install, birth data never set) —
     // don't nag the API with a doomed request every interval.
-    if (root.configState.birthDate === "") return
+    if (root.configState.birthDate === "") return false
 
     // Nothing is scheduled on "manual" — astro-arc-generate --if-due would
     // exit immediately anyway, but there is no reason to spawn it to be told
     // that.
-    if (root.configState.frequency === "manual") return
+    if (root.configState.frequency === "manual") return false
 
     var currentKey = Model.currentPeriodKey(root.configState.frequency, undefined, root.configState.intervalHours)
     // Model.runCoversPeriod, not a comparison against lastRun.periodKey: that
     // key was filed under whatever frequency was set when the run happened, so
     // comparing it across a frequency CHANGE made switching Daily -> Monthly
     // generate on the spot. See its comment in Model.js.
-    if (Model.runCoversPeriod(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return
+    if (Model.runCoversPeriod(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return false
     // Already tried this exact period this session (regardless of whether
     // it succeeded) — avoid hammering a misconfigured setup (e.g. no API
     // key) every autoGenerateCheckInterval; the next real period, or a
     // manual "Regenerate" click, will try again.
-    if (root.autoAttemptedPeriodKey === currentKey) return
+    if (root.autoAttemptedPeriodKey === currentKey) return false
+
+    // Nobody at the desk: leave the period uncovered. Both checks sit above the
+    // autoAttemptedPeriodKey write below, so a period skipped here is still
+    // due, and the return from away (or the tick after the gap clears)
+    // renders it.
+    if (presence.isIdle) {
+      if (root.awaySkippedKey !== currentKey) {
+        root.awaySkippedKey = currentKey
+        root.awaySkippedCount += 1
+        console.log("astro-arc: away, skipping " + currentKey + " (" + root.awaySkippedCount + " skipped this absence)")
+      }
+      return false
+    }
+    if (Model.tooSoonAfterLastRun(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return false
 
     root.autoAttemptedPeriodKey = currentKey
     root.startGenerate(true)
+    return true
   }
+
+  // ---- Presence ----------------------------------------------------------
+  // Hourly pictures nobody sees are money spent on an empty room, and the lock
+  // screen can't say whether anyone is there: with Omarchy's stay-awake on, the
+  // session never locks, and agents left running overnight keep the machine
+  // busy. Keyboard and mouse input can say it. This monitor is the plugin's
+  // own, separate from the shell's idle service, and respectInhibitors is off,
+  // so stay-awake, idle inhibitors and a playing video all leave it counting
+  // real input only. Watching a film hands-off counts as away, which is right:
+  // the wallpaper is behind it.
+  //
+  // Ten minutes, because the two mistakes cost different things. Calling
+  // someone away who is reading only delays the next picture until they touch
+  // something; calling an empty room occupied pays for a render.
+  readonly property int awayAfterSeconds: 10 * 60
+  property double awaySince: 0
+  property int awaySkippedCount: 0
+  property string awaySkippedKey: ""
+
+  IdleMonitor {
+    id: presence
+    timeout: root.awayAfterSeconds
+    respectInhibitors: false
+    onIsIdleChanged: {
+      if (isIdle) {
+        // The last input was `timeout` ago, not now.
+        root.awaySince = Date.now() - root.awayAfterSeconds * 1000
+        root.awaySkippedCount = 0
+        root.awaySkippedKey = ""
+        console.log("astro-arc: away since " + new Date(root.awaySince).toISOString())
+        return
+      }
+      var awayMs = Date.now() - root.awaySince
+      var skipped = root.awaySkippedCount
+      console.log("astro-arc: back after " + Model.formatAwayDuration(awayMs) + ", " + skipped + " skipped")
+      // Catch up now rather than at the next 5-minute tick. The toast only
+      // goes out when this actually started a render; a short absence inside
+      // an hour that was already painted has nothing to welcome anyone to.
+      if (root.checkAutoGenerate()) root.sendWelcomeBack(awayMs, skipped)
+      root.awaySkippedCount = 0
+      root.awaySkippedKey = ""
+    }
+  }
+
+  function sendWelcomeBack(awayMs, skipped) {
+    var nextRun = root.modelCatalog ? root.modelCatalog.nextRun : null
+    var perRun = null
+    if (nextRun) perRun = (root.configState.frequency === "hourly" && typeof nextRun.next === "number") ? nextRun.next : nextRun.full
+    welcomeBackProc.command = [
+      "omarchy-notification-send", "--app-name", "astro-arc", "-g", "✦", "-u", "low", "-t", "10000",
+      "Welcome back", Model.welcomeBackBody(awayMs, skipped, perRun)
+    ]
+    welcomeBackProc.running = true
+  }
+
+  Process { id: welcomeBackProc }
 
   Timer {
     interval: root.autoGenerateCheckInterval
@@ -2472,9 +2545,10 @@ Panel {
             wrapMode: Text.WordWrap
             text: root.configState.frequency === "manual"
               ? "Nothing generates on its own — Regenerate is the only trigger."
-              : "Runs only while the computer is on and you are logged in; a locked "
-                + "screen still counts. Anything due while it was off, asleep or "
-                + "logged out runs shortly after you are back."
+              : "Runs only while you are at the computer: after 10 minutes with no "
+                + "keyboard or mouse input it stops, even if the screen stays "
+                + "unlocked. Whatever came due while you were away runs the "
+                + "moment you are back."
             color: Qt.darker(root.bar.foreground, 1.5)
             font.family: root.bar.fontFamily
             font.pixelSize: Style.font.caption
