@@ -1453,6 +1453,12 @@ Panel {
 
         TextField {
           id: keyField
+          // Read-only until focused: an editable Qt text field fetches the
+          // clipboard's text on every clipboard change, with no paste and
+          // no size or time limit, so a hostile clipboard owner could stall
+          // the shell. readOnly fields skip that fetch. Every TextField in
+          // this file does the same.
+          readOnly: !activeFocus
           width: parent.width - saveKeyBtn.width - Style.space(8)
           password: true
           enabled: !section.keyState.saving
@@ -1816,6 +1822,7 @@ Panel {
 
               TextField {
                 id: backgroundSizeField
+                readOnly: !activeFocus  // see keyField
                 anchors.left: backgroundSizeLabel.right
                 anchors.leftMargin: Style.space(8)
                 anchors.right: detectSizeBtn.left
@@ -1959,6 +1966,7 @@ Panel {
 
               TextField {
                 id: historyRetentionField
+                readOnly: !activeFocus  // see keyField
                 anchors.left: historyRetentionLabel.right
                 anchors.leftMargin: Style.space(8)
                 anchors.right: historyRetentionDaysLabel.left
@@ -2192,6 +2200,7 @@ Panel {
               // guard makes that second pass a no-op instead of a loop.
               TextField {
                 id: birthDateField
+                readOnly: !activeFocus  // see keyField
                 anchors.left: bornLabel.right
                 anchors.leftMargin: Style.space(8)
                 anchors.verticalCenter: parent.verticalCenter
@@ -2210,6 +2219,7 @@ Panel {
 
               TextField {
                 id: birthTimeField
+                readOnly: !activeFocus  // see keyField
                 anchors.left: birthDateField.right
                 anchors.leftMargin: Style.space(6)
                 anchors.verticalCenter: parent.verticalCenter
@@ -2290,6 +2300,7 @@ Panel {
 
                 TextField {
                   id: locationField
+                  readOnly: !activeFocus  // see keyField
                   width: parent.width - cancelBtn.width - Style.space(8)
                   enabled: !root.savingLocation
                   placeholderText: "Search city, state, country"
@@ -2842,6 +2853,7 @@ Panel {
 
               TextField {
                 id: themeNameField
+                readOnly: !activeFocus  // see keyField
                 width: parent.width
                 placeholderText: "e.g. Geological Rootedness"
                 foreground: root.bar.foreground
@@ -3131,6 +3143,7 @@ Panel {
 
             TextField {
               id: advCeilingField
+              readOnly: !activeFocus  // see keyField
               anchors.left: advCeilingLabel.right
               anchors.leftMargin: Style.space(8)
               anchors.right: parent.right
