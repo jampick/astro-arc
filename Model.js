@@ -710,7 +710,7 @@ function tooSoonAfterLastRun(lastRun, frequency, now, hours) {
   return current.getTime() - generated.getTime() < minGapMinutes(frequency, hours) * 60 * 1000
 }
 
-// "2h 14m", "47m", "1d 3h" for the welcome-back toast. Minutes are floored:
+// "2h 14m", "47m", "1d 3h" for the back-from-away log line. Minutes are floored:
 // rounding up would claim time away that was not.
 function formatAwayDuration(ms) {
   var minutes = Math.max(0, Math.floor((ms || 0) / 60000))
@@ -720,20 +720,6 @@ function formatAwayDuration(ms) {
   if (days > 0) return days + "d " + hrs + "h"
   if (hrs > 0) return hrs + "h " + mins + "m"
   return mins + "m"
-}
-
-// The toast shown when a render starts because you came back. `skipped` is how
-// many periods went by unrendered while you were away; `perRun` is the
-// catalog's estimate for one of them, or null when there is none to quote.
-function welcomeBackBody(awayMs, skipped, perRun) {
-  var body = "Away " + formatAwayDuration(awayMs) + "."
-  if (skipped > 0) {
-    body += " Skipped " + skipped + (skipped === 1 ? " render" : " renders")
-    if (typeof perRun === "number" && perRun > 0)
-      body += " (about $" + (skipped * perRun).toFixed(2) + " saved)"
-    body += "."
-  }
-  return body + " Painting a fresh one now."
 }
 
 // Formats a generatedAt timestamp for display. Callers own the surrounding
@@ -790,7 +776,6 @@ if (typeof module !== "undefined") {
     minGapMinutes: minGapMinutes,
     tooSoonAfterLastRun: tooSoonAfterLastRun,
     formatAwayDuration: formatAwayDuration,
-    welcomeBackBody: welcomeBackBody,
     formatGeneratedAt: formatGeneratedAt,
     sumCosts: sumCosts,
     formatBytes: formatBytes,

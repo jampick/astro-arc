@@ -346,30 +346,28 @@ Panel {
   property string autoAttemptedPeriodKey: ""
   readonly property int autoGenerateCheckInterval: 5 * 60 * 1000
 
-  // Returns true when it started a render, so the welcome-back path knows
-  // whether there is anything to announce.
   function checkAutoGenerate() {
-    if (!root.lastRunLoaded || root.generating) return false
+    if (!root.lastRunLoaded || root.generating) return
     // Nothing to generate from yet (fresh install, birth data never set) —
     // don't nag the API with a doomed request every interval.
-    if (root.configState.birthDate === "") return false
+    if (root.configState.birthDate === "") return
 
     // Nothing is scheduled on "manual" — astro-arc-generate --if-due would
     // exit immediately anyway, but there is no reason to spawn it to be told
     // that.
-    if (root.configState.frequency === "manual") return false
+    if (root.configState.frequency === "manual") return
 
     var currentKey = Model.currentPeriodKey(root.configState.frequency, undefined, root.configState.intervalHours)
     // Model.runCoversPeriod, not a comparison against lastRun.periodKey: that
     // key was filed under whatever frequency was set when the run happened, so
     // comparing it across a frequency CHANGE made switching Daily -> Monthly
     // generate on the spot. See its comment in Model.js.
-    if (Model.runCoversPeriod(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return false
+    if (Model.runCoversPeriod(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return
     // Already tried this exact period this session (regardless of whether
     // it succeeded) — avoid hammering a misconfigured setup (e.g. no API
     // key) every autoGenerateCheckInterval; the next real period, or a
     // manual "Regenerate" click, will try again.
-    if (root.autoAttemptedPeriodKey === currentKey) return false
+    if (root.autoAttemptedPeriodKey === currentKey) return
 
     // Nobody at the desk: leave the period uncovered. Both checks sit above the
     // autoAttemptedPeriodKey write below, so a period skipped here is still
@@ -381,13 +379,12 @@ Panel {
         root.awaySkippedCount += 1
         console.log("astro-arc: away, skipping " + currentKey + " (" + root.awaySkippedCount + " skipped this absence)")
       }
-      return false
+      return
     }
-    if (Model.tooSoonAfterLastRun(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return false
+    if (Model.tooSoonAfterLastRun(root.lastRun, root.configState.frequency, undefined, root.configState.intervalHours)) return
 
     root.autoAttemptedPeriodKey = currentKey
     root.startGenerate(true)
-    return true
   }
 
   // ---- Presence ----------------------------------------------------------
@@ -424,27 +421,12 @@ Panel {
       var awayMs = Date.now() - root.awaySince
       var skipped = root.awaySkippedCount
       console.log("astro-arc: back after " + Model.formatAwayDuration(awayMs) + ", " + skipped + " skipped")
-      // Catch up now rather than at the next 5-minute tick. The toast only
-      // goes out when this actually started a render; a short absence inside
-      // an hour that was already painted has nothing to welcome anyone to.
-      if (root.checkAutoGenerate()) root.sendWelcomeBack(awayMs, skipped)
+      // Catch up now rather than at the next 5-minute tick.
+      root.checkAutoGenerate()
       root.awaySkippedCount = 0
       root.awaySkippedKey = ""
     }
   }
-
-  function sendWelcomeBack(awayMs, skipped) {
-    var nextRun = root.modelCatalog ? root.modelCatalog.nextRun : null
-    var perRun = null
-    if (nextRun) perRun = (root.configState.frequency === "hourly" && typeof nextRun.next === "number") ? nextRun.next : nextRun.full
-    welcomeBackProc.command = [
-      "omarchy-notification-send", "--app-name", "astro-arc", "-g", "✦", "-u", "low", "-t", "10000",
-      "Welcome back", Model.welcomeBackBody(awayMs, skipped, perRun)
-    ]
-    welcomeBackProc.running = true
-  }
-
-  Process { id: welcomeBackProc }
 
   Timer {
     interval: root.autoGenerateCheckInterval
